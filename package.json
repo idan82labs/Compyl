@@ -1,0 +1,28 @@
+{
+  "name": "reviewlayer",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
+    "db:reset": "pnpm --filter @reviewlayer/db db:reset",
+    "db:types": "pnpm --filter @reviewlayer/db db:types",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "prettier": "^3.8.1",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.57.0"
+  }
+}

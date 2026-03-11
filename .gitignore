@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+.next/
+.turbo/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage/
+test-results/
+playwright-report/
+
+# Python (worker-ai)
+apps/worker-ai/__pycache__/
+apps/worker-ai/.venv/
+apps/worker-ai/*.egg-info/
+*.pyc
+
+# Claude Code
+.claude/audit/
+
+# Misc
+*.log
+*.tsbuildinfo
+scratchpad.md

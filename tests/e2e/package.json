@@ -1,0 +1,16 @@
+{
+  "name": "@reviewlayer/e2e",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test",
+    "build": "echo 'no build needed'",
+    "typecheck": "echo 'typecheck placeholder'",
+    "lint": "echo 'lint placeholder'",
+    "test": "echo 'test placeholder'"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@reviewlayer/contracts": "workspace:*"
+  }
+}

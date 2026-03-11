@@ -1,0 +1,28 @@
+{
+  "name": "@reviewlayer/mcp-server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "reviewlayer-mcp": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/mcp-server.test.ts && node --import tsx src/__tests__/scope-enforcement.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@reviewlayer/contracts": "workspace:*",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

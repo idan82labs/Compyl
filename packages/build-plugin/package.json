@@ -1,0 +1,23 @@
+{
+  "name": "@reviewlayer/swc-plugin",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/plugin.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@reviewlayer/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@reviewlayer/web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/reporter-boundary.test.ts && node --import tsx src/__tests__/dual-surface-boundary.test.ts",
+    "clean": "rm -rf .next dist"
+  },
+  "dependencies": {
+    "@auth/core": "^0.34.3",
+    "@reviewlayer/config": "workspace:*",
+    "@reviewlayer/contracts": "workspace:*",
+    "@reviewlayer/ui": "workspace:*",
+    "next": "^16.1.6",
+    "next-auth": "5.0.0-beta.30",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

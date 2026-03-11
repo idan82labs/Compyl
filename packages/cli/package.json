@@ -1,0 +1,25 @@
+{
+  "name": "@reviewlayer/cli",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "reviewlayer": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/cli-commands.test.ts && node --import tsx src/__tests__/cli-scope.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@reviewlayer/contracts": "workspace:*",
+    "@reviewlayer/mcp-server": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

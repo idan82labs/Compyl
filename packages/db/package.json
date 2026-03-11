@@ -1,0 +1,31 @@
+{
+  "name": "@reviewlayer/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/boundary.test.ts",
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit push",
+    "db:reset": "drizzle-kit drop && drizzle-kit push",
+    "db:types": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@reviewlayer/contracts": "workspace:*",
+    "drizzle-orm": "^0.45.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.9",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@reviewlayer/react-adapter",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/kill-switch.test.ts && node --import tsx src/__tests__/plugin-adapter-integration.test.ts && node --import tsx src/__tests__/runtime-provenance.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@reviewlayer/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@reviewlayer/swc-plugin": "workspace:*",
+    "@types/react": "^19.2.14",
+    "react": "^19.2.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

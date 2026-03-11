@@ -1,0 +1,28 @@
+{
+  "name": "@reviewlayer/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --import tsx src/server.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'lint placeholder'",
+    "test": "node --import tsx src/__tests__/boundary-enforcement.test.ts && node --import tsx src/__tests__/annotation-boundaries.test.ts && node --import tsx src/__tests__/annotation-behavioral.test.ts && node --import tsx src/__tests__/bundle-pipeline.test.ts && node --import tsx src/__tests__/session-submit-pipeline.test.ts && node --import tsx src/__tests__/vertical-slice.test.ts && node --import tsx src/__tests__/worker-diagnostics.test.ts && node --import tsx src/__tests__/worker-error-rate.test.ts && node --import tsx src/__tests__/activity.test.ts && node --import tsx src/__tests__/figma-ranking.test.ts && node --import tsx src/__tests__/curation-gate.test.ts && node --import tsx src/__tests__/security-hardening.test.ts && node --import tsx src/__tests__/resilience.test.ts && node --import tsx src/__tests__/env-sanity.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@reviewlayer/config": "workspace:*",
+    "@reviewlayer/contracts": "workspace:*",
+    "@reviewlayer/db": "workspace:*",
+    "drizzle-orm": "^0.45.1",
+    "fastify": "^5.8.2"
+  },
+  "devDependencies": {
+    "@reviewlayer/react": "workspace:*",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

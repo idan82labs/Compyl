@@ -1,0 +1,13 @@
+{
+  "name": "@reviewlayer/worker-ai",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "python3 src/health.py",
+    "build": "echo 'no build step for Python worker'",
+    "typecheck": "echo 'mypy: skipping until venv and deps are configured'",
+    "lint": "echo 'ruff: skipping until venv and deps are configured'",
+    "test": "python3 -c \"from src.health import health_check; assert health_check()['status'] == 'ok'; print('PASS: health')\" && python3 tests/test_jobs.py",
+    "clean": "find . -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null; echo 'cleaned'"
+  }
+}
