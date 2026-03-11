@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 @import "tailwindcss";
 
@@ -18,7 +18,7 @@
   --compyl-text-muted: #78716c;
 
   /* Typography */
-  --compyl-font-display: "DM Sans", sans-serif;
+  --compyl-font-display: "Space Grotesk", sans-serif;
   --compyl-font-code: "JetBrains Mono", monospace;
 
   /* Status — pending (amber) */
@@ -269,7 +269,7 @@
   --color-ember-900: #7C2D12;
 
   /* Font families */
-  --font-display: "DM Sans", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
   --font-code: "JetBrains Mono", monospace;
 }
 
@@ -287,4 +287,80 @@ code,
 pre,
 kbd {
   font-family: var(--compyl-font-code);
+}
+
+/* ---------------------------------------------------------------------------
+   Landing page entrance animations
+   --------------------------------------------------------------------------- */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blurReveal {
+  from { filter: blur(8px); opacity: 0; transform: translateY(8px); }
+  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
+  50% { box-shadow: 0 0 24px 4px rgba(234, 88, 12, 0.15); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Animations only for users who haven't disabled motion */
+@media (prefers-reduced-motion: no-preference) {
+  .anim-fade-up {
+    animation: fadeInUp 0.7s ease-out both;
+  }
+  .anim-fade-up-1 { animation-delay: 0s; }
+  .anim-fade-up-2 { animation-delay: 0.1s; }
+  .anim-fade-up-3 { animation-delay: 0.2s; }
+  .anim-fade-up-4 { animation-delay: 0.3s; }
+  .anim-fade-up-5 { animation-delay: 0.4s; }
+
+  .anim-blur-reveal {
+    animation: blurReveal 0.8s ease-out both;
+  }
+
+  .anim-slide-left {
+    animation: slideInLeft 0.7s ease-out both;
+  }
+
+  .anim-slide-right {
+    animation: slideInRight 0.7s ease-out both;
+  }
+}
+
+.anim-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.anim-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
 }
