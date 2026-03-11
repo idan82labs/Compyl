@@ -24,8 +24,8 @@ import {
   executionBundles,
   reporterBundleColumns,
   REPORTER_FORBIDDEN_COLUMNS,
-} from "@reviewlayer/db";
-import type { AnnotationPayload } from "@reviewlayer/react";
+} from "@compyl/db";
+import type { AnnotationPayload } from "@compyl/react";
 
 // =============================================================================
 // Test 1: Annotation create response is reporter-safe

@@ -11,8 +11,8 @@
  * HOW: Creates commands with a mock ApiClient and captures audit events.
  */
 
-import type { ApiClient } from "@reviewlayer/mcp-server";
-import type { AgentAction, AgentDTO } from "@reviewlayer/contracts";
+import type { ApiClient } from "@compyl/mcp-server";
+import type { AgentAction, AgentDTO } from "@compyl/contracts";
 import {
   pullCommand,
   bundleCommand,

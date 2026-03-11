@@ -2,7 +2,7 @@
 
 
 def health_check() -> dict[str, str]:
-    return {"status": "ok", "service": "reviewlayer-worker-ai"}
+    return {"status": "ok", "service": "compyl-worker-ai"}
 
 
 if __name__ == "__main__":

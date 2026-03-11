@@ -24,4 +24,4 @@ Rules:
 - Replace blue-500 tab accent with Ember
 - Use shared components from packages/ui
 - Build the full bundle detail page at triage/[bundleId]/
-- Import all types from @reviewlayer/contracts, never re-define locally
+- Import all types from @compyl/contracts, never re-define locally

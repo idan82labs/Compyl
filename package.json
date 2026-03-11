@@ -1,5 +1,5 @@
 {
-  "name": "reviewlayer",
+  "name": "compyl",
   "private": true,
   "packageManager": "pnpm@9.15.4",
   "type": "module",
@@ -13,8 +13,8 @@
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
-    "db:reset": "pnpm --filter @reviewlayer/db db:reset",
-    "db:types": "pnpm --filter @reviewlayer/db db:types",
+    "db:reset": "pnpm --filter @compyl/db db:reset",
+    "db:types": "pnpm --filter @compyl/db db:types",
     "clean": "turbo clean"
   },
   "devDependencies": {

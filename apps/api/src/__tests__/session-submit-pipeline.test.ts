@@ -20,7 +20,7 @@
 import Fastify from "fastify";
 import type { FastifyInstance } from "fastify";
 import { sessionRoutes } from "../routes/sessions.js";
-import type { Database } from "@reviewlayer/db";
+import type { Database } from "@compyl/db";
 
 // =============================================================================
 // Mock DB

@@ -22,7 +22,7 @@ import type {
   FigmaRankingTraceEvent,
   ExactSource,
   ResolvedComponentFrame,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 import { FigmaRankingService, type RankingContext } from "../services/figma-ranking.js";
 import { StubFigmaClient } from "../services/figma-client.js";
 

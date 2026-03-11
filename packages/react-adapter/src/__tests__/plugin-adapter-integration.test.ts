@@ -20,8 +20,8 @@ import {
   attachRlMetaToWrapped,
   encodeSourceMarker,
   parseSourceMarker,
-} from "@reviewlayer/swc-plugin";
-import type { RlMeta } from "@reviewlayer/contracts";
+} from "@compyl/swc-plugin";
+import type { RlMeta } from "@compyl/contracts";
 
 // =============================================================================
 // Simulate what the adapter's extractMeta does (it's private, so we replicate)

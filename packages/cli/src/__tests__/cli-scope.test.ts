@@ -11,8 +11,8 @@
  * HOW: Creates CommandContext with different permission levels, runs commands, checks outcomes.
  */
 
-import type { ApiClient } from "@reviewlayer/mcp-server";
-import type { AgentAction, AgentDTO, AgentTokenPermission } from "@reviewlayer/contracts";
+import type { ApiClient } from "@compyl/mcp-server";
+import type { AgentAction, AgentDTO, AgentTokenPermission } from "@compyl/contracts";
 import {
   pullCommand,
   bundleCommand,

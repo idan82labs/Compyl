@@ -20,7 +20,7 @@ import type {
   RlMeta,
   ResolutionTelemetryEvent,
   AdapterFailureEvent,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 
 export interface ResolutionResult {
   /** Runtime-resolved ancestry. Array of frames, SEPARATE from exact_source. */

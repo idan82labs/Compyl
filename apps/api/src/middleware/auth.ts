@@ -16,7 +16,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { createHash } from "node:crypto";
 import { eq, and } from "drizzle-orm";
-import { agentTokens, organizationMembers, reviewerInvites } from "@reviewlayer/db";
+import { agentTokens, organizationMembers, reviewerInvites } from "@compyl/db";
 
 export type AuthRole = "reporter" | "member" | "admin" | "owner" | "agent";
 

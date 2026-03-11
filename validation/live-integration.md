@@ -49,14 +49,14 @@ cp .env.example .env
 # Edit .env: set DATABASE_URL and AUTH_SECRET
 
 # 3. Push schema to database
-pnpm --filter @reviewlayer/db db:push
+pnpm --filter @compyl/db db:push
 
 # 4. Start services
 pnpm dev  # Starts web (:3000) + api (:3001) + worker (:8001)
 
 # 5. Verify health
 curl http://localhost:3001/health
-# → { "status": "ok", "service": "reviewlayer-api" }
+# → { "status": "ok", "service": "compyl-api" }
 
 # 6. Create first organization + project via API
 # (requires Auth.js session or agent token in DB)

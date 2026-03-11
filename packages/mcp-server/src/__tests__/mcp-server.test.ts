@@ -16,9 +16,9 @@
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { createReviewLayerMcpServer } from "../server.js";
+import { createCompylMcpServer } from "../server.js";
 import type { ApiClient } from "../server.js";
-import type { AgentAction, AgentDTO } from "@reviewlayer/contracts";
+import type { AgentAction, AgentDTO } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure
@@ -135,7 +135,7 @@ function createMockApiClient(): ApiClient {
 async function createTestClient(): Promise<{ client: Client; auditEvents: AgentAction[] }> {
   const auditEvents: AgentAction[] = [];
 
-  const server = createReviewLayerMcpServer({
+  const server = createCompylMcpServer({
     apiClient: createMockApiClient(),
     auditEmitter: (event) => auditEvents.push(event),
     actorId: "test-agent-001",
@@ -403,10 +403,10 @@ async function testResourceTemplates(): Promise<void> {
   assert(templateUris.length === 4, `Expected 4 resource templates, got ${templateUris.length}`);
 
   const expectedUris = [
-    "reviewlayer://bundles/{bundleId}",
-    "reviewlayer://projects/{projectId}/bundles",
-    "reviewlayer://projects/{projectId}/sessions",
-    "reviewlayer://sessions/{sessionId}",
+    "compyl://bundles/{bundleId}",
+    "compyl://projects/{projectId}/bundles",
+    "compyl://projects/{projectId}/sessions",
+    "compyl://sessions/{sessionId}",
   ];
 
   for (const expected of expectedUris) {

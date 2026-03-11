@@ -15,7 +15,7 @@
  */
 
 import { WorkerClient } from "../worker-client.js";
-import type { ApiJobDiagnosticEvent, WorkerJobRequest } from "@reviewlayer/contracts";
+import type { ApiJobDiagnosticEvent, WorkerJobRequest } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure

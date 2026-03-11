@@ -11,12 +11,12 @@ Add to your MCP settings (e.g. `.claude/settings.json` or Cursor MCP config):
 ```json
 {
   "mcpServers": {
-    "reviewlayer": {
+    "compyl": {
       "command": "npx",
-      "args": ["reviewlayer-mcp"],
+      "args": ["compyl-mcp"],
       "env": {
-        "REVIEWLAYER_API_URL": "https://api.reviewlayer.io",
-        "REVIEWLAYER_AGENT_TOKEN": "rl_agent_..."
+        "COMPYL_API_URL": "https://api.compyl.dev",
+        "COMPYL_AGENT_TOKEN": "rl_agent_..."
       }
     }
   }
@@ -26,7 +26,7 @@ Add to your MCP settings (e.g. `.claude/settings.json` or Cursor MCP config):
 Or with explicit args:
 
 ```bash
-reviewlayer-mcp --api-url https://api.reviewlayer.io --token rl_agent_...
+compyl-mcp --api-url https://api.compyl.dev --token rl_agent_...
 ```
 
 ### Available Tools (10)
@@ -48,10 +48,10 @@ reviewlayer-mcp --api-url https://api.reviewlayer.io --token rl_agent_...
 
 | URI Template | Description |
 |-------------|-------------|
-| `reviewlayer://bundles/{bundleId}` | Single bundle |
-| `reviewlayer://projects/{projectId}/bundles` | All project bundles |
-| `reviewlayer://sessions/{sessionId}` | Session details |
-| `reviewlayer://projects/{projectId}/sessions` | All project sessions |
+| `compyl://bundles/{bundleId}` | Single bundle |
+| `compyl://projects/{projectId}/bundles` | All project bundles |
+| `compyl://sessions/{sessionId}` | Session details |
+| `compyl://projects/{projectId}/sessions` | All project sessions |
 
 ### Token Scopes
 
@@ -117,45 +117,45 @@ Denied actions emit audit events with `status: "denied"` and `error_code: "SCOPE
 ### Installation
 
 ```bash
-pnpm add @reviewlayer/cli
+pnpm add @compyl/cli
 ```
 
 ### Commands (7)
 
 | Command | Type | Usage |
 |---------|------|-------|
-| `reviewlayer pull` | read | `reviewlayer pull --project <id>` |
-| `reviewlayer bundle` | read | `reviewlayer bundle <id>` |
-| `reviewlayer status` | mutate | `reviewlayer status <id> <status>` |
-| `reviewlayer plan` | read | `reviewlayer plan <id>` |
-| `reviewlayer push-result` | mutate | `reviewlayer push-result <id> --summary <text> --files <paths...>` |
-| `reviewlayer validate` | mutate | `reviewlayer validate <id> --results <json>` |
-| `reviewlayer diff` | read | `reviewlayer diff --project <id> --query <text>` |
+| `compyl pull` | read | `compyl pull --project <id>` |
+| `compyl bundle` | read | `compyl bundle <id>` |
+| `compyl status` | mutate | `compyl status <id> <status>` |
+| `compyl plan` | read | `compyl plan <id>` |
+| `compyl push-result` | mutate | `compyl push-result <id> --summary <text> --files <paths...>` |
+| `compyl validate` | mutate | `compyl validate <id> --results <json>` |
+| `compyl diff` | read | `compyl diff --project <id> --query <text>` |
 
 ### Happy Path: CLI Workflow
 
 ```bash
 # 1. Pull pending bundles
-reviewlayer pull --project proj-123
+compyl pull --project proj-123
 
 # 2. Read specific bundle
-reviewlayer bundle bundle-456
+compyl bundle bundle-456
 
 # 3. Generate execution plan
-reviewlayer plan bundle-456
+compyl plan bundle-456
 
 # 4. Mark in progress
-reviewlayer status bundle-456 in_progress
+compyl status bundle-456 in_progress
 
 # 5. [Fix the issue]
 
 # 6. Push resolution
-reviewlayer push-result bundle-456 \
+compyl push-result bundle-456 \
   --summary "Fixed overflow" \
   --files src/SubmitButton.tsx src/checkout.css
 
 # 7. Submit validation
-reviewlayer validate bundle-456 \
+compyl validate bundle-456 \
   --results '[{"step":"viewport test","passed":true}]'
 ```
 

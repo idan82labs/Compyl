@@ -44,11 +44,11 @@ apps/
 packages/
   contracts/        Single source of truth: ExecutionBundle schema, DTOs,
                     API contracts, MCP payloads, worker job schemas
-  sdk/              @reviewlayer/react — same-origin annotation SDK
+  sdk/              @compyl/react — same-origin annotation SDK
   react-adapter/    Versioned React runtime adapter (fiber walk, provenance)
-  build-plugin/     @reviewlayer/swc-plugin (SWC + Babel build-time instrumentation)
+  build-plugin/     @compyl/swc-plugin (SWC + Babel build-time instrumentation)
   mcp-server/       MCP server (embeddable + standalone)
-  cli/              @reviewlayer/cli
+  cli/              @compyl/cli
   db/               Drizzle ORM schema, migrations, column selection
   config/           Shared config, environment validation
   ui/               Shared design system (shadcn/ui + tokens)

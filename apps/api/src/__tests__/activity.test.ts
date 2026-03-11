@@ -17,7 +17,7 @@
 import Fastify from "fastify";
 import type { FastifyInstance } from "fastify";
 import { activityRoutes } from "../routes/activity.js";
-import type { AgentAction } from "@reviewlayer/contracts";
+import type { AgentAction } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure

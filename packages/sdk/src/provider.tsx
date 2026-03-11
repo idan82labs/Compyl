@@ -1,5 +1,5 @@
 /**
- * ReviewLayerProvider — same-origin annotation SDK entry point.
+ * CompylProvider — same-origin annotation SDK entry point.
  *
  * Mounts the annotation overlay ONLY when a valid review token is present.
  * Zero overhead in normal staging use — checks for token on mount, no-ops otherwise.
@@ -14,7 +14,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { AnnotationMode, AnnotationPayload } from "./types.js";
 
-export interface ReviewLayerConfig {
+export interface CompylConfig {
   /** API endpoint base URL. */
   apiUrl: string;
   /** Review session token (from invite link). */
@@ -23,7 +23,7 @@ export interface ReviewLayerConfig {
   forceEnable?: boolean;
 }
 
-interface ReviewLayerContextValue {
+interface CompylContextValue {
   /** Whether the SDK is active (token present and valid). */
   active: boolean;
   /** Current annotation mode. */
@@ -36,7 +36,7 @@ interface ReviewLayerContextValue {
   sessionId: string | null;
 }
 
-const ReviewLayerContext = createContext<ReviewLayerContextValue>({
+const CompylContext = createContext<CompylContextValue>({
   active: false,
   mode: null,
   setMode: () => {},
@@ -44,15 +44,15 @@ const ReviewLayerContext = createContext<ReviewLayerContextValue>({
   sessionId: null,
 });
 
-export function useReviewLayer() {
-  return useContext(ReviewLayerContext);
+export function useCompyl() {
+  return useContext(CompylContext);
 }
 
-export function ReviewLayerProvider({
+export function CompylProvider({
   config,
   children,
 }: {
-  config: ReviewLayerConfig;
+  config: CompylConfig;
   children: React.ReactNode;
 }) {
   const [active, setActive] = useState(false);
@@ -103,10 +103,10 @@ export function ReviewLayerProvider({
   };
 
   return (
-    <ReviewLayerContext.Provider
+    <CompylContext.Provider
       value={{ active, mode, setMode, submitAnnotation, sessionId }}
     >
       {children}
-    </ReviewLayerContext.Provider>
+    </CompylContext.Provider>
   );
 }

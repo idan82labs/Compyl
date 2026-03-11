@@ -13,7 +13,7 @@
  * HOW: Direct unit tests of transition rules + mock Fastify inject for API behavior.
  */
 
-import type { BundleStatus } from "@reviewlayer/contracts";
+import type { BundleStatus } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure

@@ -65,11 +65,11 @@ packages/
   contracts/      — SINGLE SOURCE OF TRUTH: ExecutionBundle schema, provenance types,
                     API DTOs (reporter/developer/agent), MCP tool payloads,
                     API↔worker job schemas, shared enums/constants
-  sdk/            — @reviewlayer/react (same-origin annotation SDK)
+  sdk/            — @compyl/react (same-origin annotation SDK)
   react-adapter/  — Versioned React runtime adapter + resolver
-  build-plugin/   — @reviewlayer/swc-plugin (SWC + Babel)
+  build-plugin/   — @compyl/swc-plugin (SWC + Babel)
   mcp-server/     — MCP server (embeddable + standalone)
-  cli/            — @reviewlayer/cli
+  cli/            — @compyl/cli
   ui/             — Shared design system (shadcn/ui + tokens)
   db/             — Drizzle schema + migrations
   config/         — Shared config, env validation, constants

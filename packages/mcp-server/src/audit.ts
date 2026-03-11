@@ -6,7 +6,7 @@
  * can route events to structured logging, database, or analytics.
  */
 
-import type { AgentAction, AgentActionStatus } from "@reviewlayer/contracts";
+import type { AgentAction, AgentActionStatus } from "@compyl/contracts";
 import { randomUUID } from "node:crypto";
 
 export type AuditEmitter = (action: AgentAction) => void;

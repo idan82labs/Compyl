@@ -29,18 +29,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@compyl/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@compyl/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@compyl/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@fastify/cors':
         specifier: ^11.2.0
         version: 11.2.0
-      '@reviewlayer/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@reviewlayer/contracts':
-        specifier: workspace:*
-        version: link:../../packages/contracts
-      '@reviewlayer/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.18.0)
@@ -48,7 +48,7 @@ importers:
         specifier: ^5.8.2
         version: 5.8.2
     devDependencies:
-      '@reviewlayer/react':
+      '@compyl/react':
         specifier: workspace:*
         version: link:../../packages/sdk
       '@types/node':
@@ -66,13 +66,13 @@ importers:
       '@auth/core':
         specifier: ^0.34.3
         version: 0.34.3
-      '@reviewlayer/config':
+      '@compyl/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@reviewlayer/contracts':
+      '@compyl/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
-      '@reviewlayer/ui':
+      '@compyl/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -114,7 +114,7 @@ importers:
 
   packages/build-plugin:
     dependencies:
-      '@reviewlayer/contracts':
+      '@compyl/contracts':
         specifier: workspace:*
         version: link:../contracts
     devDependencies:
@@ -130,10 +130,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@reviewlayer/contracts':
+      '@compyl/contracts':
         specifier: workspace:*
         version: link:../contracts
-      '@reviewlayer/mcp-server':
+      '@compyl/mcp-server':
         specifier: workspace:*
         version: link:../mcp-server
     devDependencies:
@@ -164,12 +164,12 @@ importers:
 
   packages/db:
     dependencies:
+      '@compyl/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@neondatabase/serverless':
         specifier: ^1.0.2
         version: 1.0.2
-      '@reviewlayer/contracts':
-        specifier: workspace:*
-        version: link:../contracts
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.18.0)
@@ -186,12 +186,12 @@ importers:
 
   packages/mcp-server:
     dependencies:
+      '@compyl/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@modelcontextprotocol/sdk':
         specifier: ^1.27.1
         version: 1.27.1(zod@4.3.6)
-      '@reviewlayer/contracts':
-        specifier: workspace:*
-        version: link:../contracts
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -208,11 +208,11 @@ importers:
 
   packages/react-adapter:
     dependencies:
-      '@reviewlayer/contracts':
+      '@compyl/contracts':
         specifier: workspace:*
         version: link:../contracts
     devDependencies:
-      '@reviewlayer/swc-plugin':
+      '@compyl/swc-plugin':
         specifier: workspace:*
         version: link:../build-plugin
       '@types/react':
@@ -230,7 +230,7 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@reviewlayer/contracts':
+      '@compyl/contracts':
         specifier: workspace:*
         version: link:../contracts
     devDependencies:
@@ -264,12 +264,12 @@ importers:
 
   tests/e2e:
     devDependencies:
+      '@compyl/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@playwright/test':
         specifier: ^1.51.1
         version: 1.58.2
-      '@reviewlayer/contracts':
-        specifier: workspace:*
-        version: link:../../packages/contracts
 
 packages:
 

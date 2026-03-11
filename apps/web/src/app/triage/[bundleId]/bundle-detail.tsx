@@ -6,7 +6,7 @@ import type {
   FeedbackCategory,
   ResolutionMode,
   Severity,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 import {
   CodeBlock,
   ConfidenceDot,
@@ -15,7 +15,7 @@ import {
   ProvenanceBadge,
   SeverityBadge,
   StatusBadge,
-} from "@reviewlayer/ui";
+} from "@compyl/ui";
 
 // =============================================================================
 // Developer bundle type — full technical context (matches triage-list shape)

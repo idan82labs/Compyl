@@ -1,5 +1,5 @@
 /**
- * @reviewlayer/contracts
+ * @compyl/contracts
  *
  * Single source of truth for all shared types across the Compyl system.
  * Every package imports from here — no ad-hoc type definitions allowed.

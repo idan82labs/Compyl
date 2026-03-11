@@ -5,7 +5,7 @@
  * developers see the full technical context.
  *
  * Usage:
- *   import { reporterBundleColumns, developerBundleColumns } from "@reviewlayer/db";
+ *   import { reporterBundleColumns, developerBundleColumns } from "@compyl/db";
  *   db.select(reporterBundleColumns).from(executionBundles);
  */
 

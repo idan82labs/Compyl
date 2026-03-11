@@ -6,7 +6,7 @@ import type {
   Severity,
   ResolutionMode,
   BundleStatus,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 import {
   StatusBadge,
   SeverityBadge,
@@ -16,7 +16,7 @@ import {
   ErrorState,
   EmptyState,
   CodeBlock,
-} from "@reviewlayer/ui";
+} from "@compyl/ui";
 
 // =============================================================================
 // Developer bundle type — full technical context

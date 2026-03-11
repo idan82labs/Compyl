@@ -14,7 +14,7 @@ import {
   reporterBundleColumns,
   developerBundleColumns,
   REPORTER_FORBIDDEN_COLUMNS,
-} from "@reviewlayer/db";
+} from "@compyl/db";
 
 // =============================================================================
 // Test 1: Reporter columns never include provenance

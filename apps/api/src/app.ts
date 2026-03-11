@@ -2,15 +2,15 @@
  * Fastify application factory.
  *
  * Creates and configures the Compyl API server.
- * All routes use typed contracts from @reviewlayer/contracts.
+ * All routes use typed contracts from @compyl/contracts.
  * DB instance is decorated onto the Fastify instance for route access.
  */
 
 import Fastify from "fastify";
 import cors from "@fastify/cors";
-import type { Database } from "@reviewlayer/db";
-import { createDb } from "@reviewlayer/db";
-import { getEnv } from "@reviewlayer/config";
+import type { Database } from "@compyl/db";
+import { createDb } from "@compyl/db";
+import { getEnv } from "@compyl/config";
 
 import { projectRoutes } from "./routes/projects.js";
 import { inviteRoutes } from "./routes/invites.js";
@@ -44,7 +44,7 @@ export async function buildApp(opts?: AppOptions) {
   await app.register(cors, { origin: true });
 
   // Health check
-  app.get("/health", async () => ({ status: "ok", service: "reviewlayer-api" }));
+  app.get("/health", async () => ({ status: "ok", service: "compyl-api" }));
 
   // Routes
   await app.register(projectRoutes, { prefix: "/api/v1" });

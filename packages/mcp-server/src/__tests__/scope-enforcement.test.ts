@@ -13,9 +13,9 @@
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { createReviewLayerMcpServer } from "../server.js";
+import { createCompylMcpServer } from "../server.js";
 import type { ApiClient } from "../server.js";
-import type { AgentAction, AgentDTO, AgentTokenPermission } from "@reviewlayer/contracts";
+import type { AgentAction, AgentDTO, AgentTokenPermission } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure
@@ -99,7 +99,7 @@ async function createScopedClient(permission?: AgentTokenPermission): Promise<{
 }> {
   const auditEvents: AgentAction[] = [];
 
-  const server = createReviewLayerMcpServer({
+  const server = createCompylMcpServer({
     apiClient: createMockApiClient(),
     auditEmitter: (event) => auditEvents.push(event),
     actorId: "test-agent-scope",

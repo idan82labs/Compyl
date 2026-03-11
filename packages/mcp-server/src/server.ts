@@ -11,7 +11,7 @@
 
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { AgentDTO, AgentTokenPermission } from "@reviewlayer/contracts";
+import type { AgentDTO, AgentTokenPermission } from "@compyl/contracts";
 import { createMcpAuditEvent, type AuditEmitter } from "./audit.js";
 
 // =============================================================================
@@ -96,7 +96,7 @@ export interface ApiClient {
 // Server config
 // =============================================================================
 
-export interface ReviewLayerMcpServerConfig {
+export interface CompylMcpServerConfig {
   apiClient: ApiClient;
   auditEmitter: AuditEmitter;
   /** Actor ID for audit events (e.g. agent token ID). */
@@ -205,11 +205,11 @@ async function audited<T>(
 // Server factory
 // =============================================================================
 
-export function createReviewLayerMcpServer(config: ReviewLayerMcpServerConfig): McpServer {
+export function createCompylMcpServer(config: CompylMcpServerConfig): McpServer {
   const { apiClient, auditEmitter, actorId, permission } = config;
 
   const mcp = new McpServer({
-    name: "reviewlayer",
+    name: "compyl",
     version: "0.1.0",
   }, {
     capabilities: {
@@ -481,7 +481,7 @@ export function createReviewLayerMcpServer(config: ReviewLayerMcpServerConfig): 
 
   mcp.registerResource(
     "bundle",
-    new ResourceTemplate("reviewlayer://bundles/{bundleId}", { list: undefined }),
+    new ResourceTemplate("compyl://bundles/{bundleId}", { list: undefined }),
     { description: "A single ExecutionBundle with full provenance context" },
     async (uri, variables) => {
       const bundleId = variables["bundleId"] as string;
@@ -495,7 +495,7 @@ export function createReviewLayerMcpServer(config: ReviewLayerMcpServerConfig): 
 
   mcp.registerResource(
     "project_bundles",
-    new ResourceTemplate("reviewlayer://projects/{projectId}/bundles", { list: undefined }),
+    new ResourceTemplate("compyl://projects/{projectId}/bundles", { list: undefined }),
     { description: "All bundles for a project" },
     async (uri, variables) => {
       const projectId = variables["projectId"] as string;
@@ -506,7 +506,7 @@ export function createReviewLayerMcpServer(config: ReviewLayerMcpServerConfig): 
 
   mcp.registerResource(
     "session",
-    new ResourceTemplate("reviewlayer://sessions/{sessionId}", { list: undefined }),
+    new ResourceTemplate("compyl://sessions/{sessionId}", { list: undefined }),
     { description: "Review session details" },
     async (uri, variables) => {
       const sessionId = variables["sessionId"] as string;
@@ -520,7 +520,7 @@ export function createReviewLayerMcpServer(config: ReviewLayerMcpServerConfig): 
 
   mcp.registerResource(
     "project_sessions",
-    new ResourceTemplate("reviewlayer://projects/{projectId}/sessions", { list: undefined }),
+    new ResourceTemplate("compyl://projects/{projectId}/sessions", { list: undefined }),
     { description: "All review sessions for a project" },
     async (uri, variables) => {
       const projectId = variables["projectId"] as string;

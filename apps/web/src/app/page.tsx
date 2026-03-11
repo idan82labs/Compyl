@@ -1,4 +1,4 @@
-import { Logo } from "@reviewlayer/ui";
+import { Logo } from "@compyl/ui";
 import { WaitlistForm } from "./waitlist-form";
 
 const EXECUTION_BUNDLE = `{

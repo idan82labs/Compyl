@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * @reviewlayer/cli
+ * @compyl/cli
  *
  * CLI for Compyl. Every command emits structured AgentAction events
  * via the same audit contract as the MCP server.
  *
  * Usage:
- *   reviewlayer pull --project <id>
- *   reviewlayer bundle <id>
- *   reviewlayer status <id> <status>
- *   reviewlayer plan <id>
- *   reviewlayer push-result <id> --summary <text> --files <paths...>
- *   reviewlayer validate <id> --results <json>
- *   reviewlayer diff --project <id> --query <text>
+ *   compyl pull --project <id>
+ *   compyl bundle <id>
+ *   compyl status <id> <status>
+ *   compyl plan <id>
+ *   compyl push-result <id> --summary <text> --files <paths...>
+ *   compyl validate <id> --results <json>
+ *   compyl diff --project <id> --query <text>
  */
 
 export {

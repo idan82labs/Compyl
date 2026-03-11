@@ -11,8 +11,8 @@
 
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { executionBundles, designCandidates as designCandidatesTable } from "@reviewlayer/db";
-import type { DesignCandidate, FigmaRankingTraceEvent } from "@reviewlayer/contracts";
+import { executionBundles, designCandidates as designCandidatesTable } from "@compyl/db";
+import type { DesignCandidate, FigmaRankingTraceEvent } from "@compyl/contracts";
 
 // In-memory trace store (replaced by DB/analytics in production)
 const rankingTraces: FigmaRankingTraceEvent[] = [];

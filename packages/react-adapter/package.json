@@ -1,5 +1,5 @@
 {
-  "name": "@reviewlayer/react-adapter",
+  "name": "@compyl/react-adapter",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -13,10 +13,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@reviewlayer/contracts": "workspace:*"
+    "@compyl/contracts": "workspace:*"
   },
   "devDependencies": {
-    "@reviewlayer/swc-plugin": "workspace:*",
+    "@compyl/swc-plugin": "workspace:*",
     "@types/react": "^19.2.14",
     "react": "^19.2.4",
     "tsx": "^4.21.0",

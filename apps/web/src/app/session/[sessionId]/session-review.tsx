@@ -7,7 +7,7 @@ import {
   LoadingState,
   ErrorState,
   EmptyState,
-} from "@reviewlayer/ui";
+} from "@compyl/ui";
 
 // =============================================================================
 // Reporter-safe types (matches API response shape)

@@ -35,9 +35,9 @@
 
 ## Evidence
 
-- typecheck output: `pnpm --filter @reviewlayer/contracts typecheck` — PASS (0 errors)
-- build output: `pnpm --filter @reviewlayer/contracts build` — produces dist/index.js + dist/index.d.ts
+- typecheck output: `pnpm --filter @compyl/contracts typecheck` — PASS (0 errors)
+- build output: `pnpm --filter @compyl/contracts build` — produces dist/index.js + dist/index.d.ts
 - full workspace typecheck: 17/17 tasks pass
 - boundary test: `packages/db/src/__tests__/boundary.test.ts` — 9 reporter columns, 23 forbidden excluded
 - worker job tests: `apps/worker-ai/tests/test_jobs.py` — 4 tests pass (valid job, invalid type, idempotency, all 6 types)
-- import verification: sdk, react-adapter, build-plugin, mcp-server, cli, db, api, web all have `@reviewlayer/contracts: workspace:*` dependency
+- import verification: sdk, react-adapter, build-plugin, mcp-server, cli, db, api, web all have `@compyl/contracts: workspace:*` dependency

@@ -2,7 +2,7 @@
  * Drizzle ORM client — Neon serverless PostgreSQL connection.
  *
  * Usage:
- *   import { db } from "@reviewlayer/db";
+ *   import { db } from "@compyl/db";
  *   const rows = await db.select().from(organizations);
  */
 

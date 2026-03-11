@@ -5,7 +5,7 @@
  * The emitter writes to stderr as structured JSON in standalone mode.
  */
 
-import type { AgentAction, AgentActionStatus } from "@reviewlayer/contracts";
+import type { AgentAction, AgentActionStatus } from "@compyl/contracts";
 import { randomUUID } from "node:crypto";
 
 export type CliAuditEmitter = (action: AgentAction) => void;

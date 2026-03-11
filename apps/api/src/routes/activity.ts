@@ -10,14 +10,14 @@
 
 import type { FastifyInstance } from "fastify";
 import { eq, desc, and, sql } from "drizzle-orm";
-import { auditEvents } from "@reviewlayer/db";
+import { auditEvents } from "@compyl/db";
 import type {
   AgentAction,
   AgentActionSource,
   AgentActorType,
   AgentActionStatus,
   ActivityQueryResponse,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 
 /**
  * Map an audit_events row to AgentAction contract shape.

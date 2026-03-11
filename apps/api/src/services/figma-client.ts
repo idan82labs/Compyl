@@ -11,7 +11,7 @@
  * - Token refresh handled transparently by the client
  */
 
-import type { FigmaComponentInfo, CodeConnectMapping } from "@reviewlayer/contracts";
+import type { FigmaComponentInfo, CodeConnectMapping } from "@compyl/contracts";
 
 // =============================================================================
 // Configuration

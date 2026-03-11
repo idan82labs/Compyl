@@ -409,7 +409,7 @@ Owner: agent-platform-engineer
 
 Owner: agent-platform-engineer
 
-- `reviewlayer pull`, `bundle`, `diff`, `status`, `plan`, `push-result`, `validate`
+- `compyl pull`, `bundle`, `diff`, `status`, `plan`, `push-result`, `validate`
 - same contracts as MCP
 - every command logged as AgentAction (observability)
   Done when:

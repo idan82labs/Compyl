@@ -1,7 +1,7 @@
 ---
 name: kickoff
 argument-hint: [milestone-or-task-cluster]
-description: Start a milestone or task cluster using the ReviewLayer program docs, decompose the work, assign subagents, and update progress.
+description: Start a milestone or task cluster using the Compyl program docs, decompose the work, assign subagents, and update progress.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Agent, Write, Edit
 ---

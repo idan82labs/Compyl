@@ -9,7 +9,7 @@
  */
 
 import type { ApiClient } from "./server.js";
-import type { AgentDTO } from "@reviewlayer/contracts";
+import type { AgentDTO } from "@compyl/contracts";
 
 export interface HttpApiClientConfig {
   baseUrl: string;

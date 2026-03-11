@@ -23,8 +23,8 @@
 import Fastify from "fastify";
 import type { FastifyInstance } from "fastify";
 import { annotationRoutes } from "../routes/annotations.js";
-import type { Database } from "@reviewlayer/db";
-import { REPORTER_FORBIDDEN_COLUMNS } from "@reviewlayer/db";
+import type { Database } from "@compyl/db";
+import { REPORTER_FORBIDDEN_COLUMNS } from "@compyl/db";
 
 // =============================================================================
 // Mock DB factory

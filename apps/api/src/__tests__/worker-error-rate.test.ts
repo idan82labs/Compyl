@@ -15,7 +15,7 @@
  */
 
 import { WorkerErrorRateTracker } from "../worker-error-rate.js";
-import type { ApiJobDiagnosticEvent, WorkerErrorRateAlert } from "@reviewlayer/contracts";
+import type { ApiJobDiagnosticEvent, WorkerErrorRateAlert } from "@compyl/contracts";
 
 // =============================================================================
 // Test infrastructure

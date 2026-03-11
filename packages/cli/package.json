@@ -1,10 +1,10 @@
 {
-  "name": "@reviewlayer/cli",
+  "name": "@compyl/cli",
   "version": "0.0.1",
   "private": true,
   "type": "module",
   "bin": {
-    "reviewlayer": "./dist/index.js"
+    "compyl": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -14,8 +14,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@reviewlayer/contracts": "workspace:*",
-    "@reviewlayer/mcp-server": "workspace:*"
+    "@compyl/contracts": "workspace:*",
+    "@compyl/mcp-server": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

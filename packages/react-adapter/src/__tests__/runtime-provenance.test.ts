@@ -25,7 +25,7 @@
  */
 
 import { resolveComponentStack } from "../resolver.js";
-import type { RlMeta, AdapterFailureEvent, ResolutionTelemetryEvent } from "@reviewlayer/contracts";
+import type { RlMeta, AdapterFailureEvent, ResolutionTelemetryEvent } from "@compyl/contracts";
 
 // =============================================================================
 // Fiber tree construction helpers

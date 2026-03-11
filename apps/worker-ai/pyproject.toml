@@ -1,5 +1,5 @@
 [project]
-name = "reviewlayer-worker-ai"
+name = "compyl-worker-ai"
 version = "0.0.1"
 description = "Compyl AI processing worker (Python/Claude API)"
 requires-python = ">=3.11"

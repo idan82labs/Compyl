@@ -1,5 +1,5 @@
 {
-  "name": "@reviewlayer/react",
+  "name": "@compyl/react",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@reviewlayer/contracts": "workspace:*"
+    "@compyl/contracts": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

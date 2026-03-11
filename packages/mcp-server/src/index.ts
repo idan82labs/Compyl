@@ -1,5 +1,5 @@
 /**
- * @reviewlayer/mcp-server
+ * @compyl/mcp-server
  *
  * MCP server for Compyl. Exposes ExecutionBundles, sessions, and projects
  * as tools and resources for AI coding agents (Claude Code, Cursor, Codex).
@@ -11,8 +11,8 @@
  * unless explicitly enabled per project.
  */
 
-export { createReviewLayerMcpServer } from "./server.js";
-export type { ReviewLayerMcpServerConfig, ApiClient } from "./server.js";
+export { createCompylMcpServer } from "./server.js";
+export type { CompylMcpServerConfig, ApiClient } from "./server.js";
 export { createMcpAuditEvent } from "./audit.js";
 export type { AuditEmitter } from "./audit.js";
-export type { AgentTokenPermission } from "@reviewlayer/contracts";
+export type { AgentTokenPermission } from "@compyl/contracts";

@@ -1,6 +1,6 @@
-// @reviewlayer/ui — Compyl Ember Design System
+// @compyl/ui — Compyl Ember Design System
 // Shared tokens, primitives, and components.
-// Does NOT import from @reviewlayer/contracts — all components take primitive props.
+// Does NOT import from @compyl/contracts — all components take primitive props.
 
 // ---------------------------------------------------------------------------
 // Design tokens

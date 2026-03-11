@@ -1,5 +1,5 @@
 {
-  "name": "@reviewlayer/db",
+  "name": "@compyl/db",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
-    "@reviewlayer/contracts": "workspace:*",
+    "@compyl/contracts": "workspace:*",
     "drizzle-orm": "^0.45.1"
   },
   "devDependencies": {

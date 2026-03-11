@@ -7,7 +7,7 @@
 
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { organizations, projects, organizationMembers } from "@reviewlayer/db";
+import { organizations, projects, organizationMembers } from "@compyl/db";
 import { requireAuth } from "../middleware/auth.js";
 
 export async function projectRoutes(app: FastifyInstance) {

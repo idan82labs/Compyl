@@ -14,9 +14,9 @@
 
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { executionBundles, projects, developerBundleColumns } from "@reviewlayer/db";
+import { executionBundles, projects, developerBundleColumns } from "@compyl/db";
 import { requireAuth, requireWritePermission } from "../middleware/auth.js";
-import type { BundleStatus } from "@reviewlayer/contracts";
+import type { BundleStatus } from "@compyl/contracts";
 
 // =============================================================================
 // Input validation

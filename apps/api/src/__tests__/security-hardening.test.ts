@@ -17,7 +17,7 @@
  * HOW: Direct unit tests of auth logic, transition rules, and boundary enforcement.
  */
 
-import type { BundleStatus } from "@reviewlayer/contracts";
+import type { BundleStatus } from "@compyl/contracts";
 import { createHash } from "node:crypto";
 
 // =============================================================================
@@ -417,7 +417,7 @@ function testCORSSecurityAwareness(): void {
   assert(isPermissive, "Current CORS is permissive (origin: true) — documented risk");
 
   // When hardened, this should be:
-  // const hardenedOrigins = ["https://app.reviewlayer.com", "http://localhost:3000"];
+  // const hardenedOrigins = ["https://app.compyl.com", "http://localhost:3000"];
   // assert(hardenedOrigins.length >= 1, "Production must have explicit origin whitelist");
 
   pass("CORS security: permissive setting documented, production whitelist planned");

@@ -27,7 +27,7 @@ import {
   normalizeOptions,
   planFileTransforms,
 } from "../index.js";
-import type { RlMeta } from "@reviewlayer/contracts";
+import type { RlMeta } from "@compyl/contracts";
 
 // =============================================================================
 // Test 1: Source marker encoding

@@ -11,7 +11,7 @@
  */
 
 /**
- * Forbidden columns — copied from @reviewlayer/db select.ts.
+ * Forbidden columns — copied from @compyl/db select.ts.
  * We do NOT import from db here because the web app should not
  * depend on the db package. This is an intentional duplication
  * for boundary testing purposes.

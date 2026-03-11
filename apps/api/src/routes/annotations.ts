@@ -11,7 +11,7 @@
 
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { annotations, reviewSessions } from "@reviewlayer/db";
+import { annotations, reviewSessions } from "@compyl/db";
 
 export async function annotationRoutes(app: FastifyInstance) {
   /**

@@ -119,7 +119,7 @@ function testDefaults(): void {
 
 function testFullyPopulated(): void {
   const { result, errors } = validateEnvFromMap({
-    DATABASE_URL: "postgresql://prod:secret@neon.tech/reviewlayer?sslmode=require",
+    DATABASE_URL: "postgresql://prod:secret@neon.tech/compyl?sslmode=require",
     AUTH_SECRET: "super-secret-key-32-chars-long!!",
     WORKER_AI_URL: "https://worker.railway.app",
     NODE_ENV: "production",

@@ -25,5 +25,5 @@ You build the public face of Compyl.
 ## Rules
 - Landing page is a server component. Waitlist form is a client island.
 - Must be responsive down to 375px.
-- Remove ALL "ReviewLayer" strings from metadata, titles, descriptions.
+- Ensure all metadata, titles, and descriptions use "Compyl" branding.
 - Primary CTA buttons are BLACK (not accent-colored). Accent is for information, not action.

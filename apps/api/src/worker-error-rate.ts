@@ -8,7 +8,7 @@
  * Designed to be fed from the WorkerClient diagnostic callback.
  */
 
-import type { ApiJobDiagnosticEvent, WorkerErrorRateAlert } from "@reviewlayer/contracts";
+import type { ApiJobDiagnosticEvent, WorkerErrorRateAlert } from "@compyl/contracts";
 
 export type ErrorRateAlertCallback = (alert: WorkerErrorRateAlert) => void;
 

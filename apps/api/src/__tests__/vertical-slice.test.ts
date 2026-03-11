@@ -24,7 +24,7 @@ import type { FastifyInstance } from "fastify";
 import { sessionRoutes } from "../routes/sessions.js";
 import { annotationRoutes } from "../routes/annotations.js";
 import { bundleRoutes } from "../routes/bundles.js";
-import type { Database } from "@reviewlayer/db";
+import type { Database } from "@compyl/db";
 
 // =============================================================================
 // Mock Worker — intercepts fetch to simulate worker HTTP responses

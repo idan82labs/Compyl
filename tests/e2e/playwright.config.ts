@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm --filter @reviewlayer/web dev",
+    command: "pnpm --filter @compyl/web dev",
     port: 3000,
     timeout: 30_000,
     reuseExistingServer: !process.env["CI"],

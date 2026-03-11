@@ -1,12 +1,12 @@
 {
-  "name": "@reviewlayer/mcp-server",
+  "name": "@compyl/mcp-server",
   "version": "0.0.1",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "reviewlayer-mcp": "./dist/bin.js"
+    "compyl-mcp": "./dist/bin.js"
   },
   "scripts": {
     "build": "tsc",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
-    "@reviewlayer/contracts": "workspace:*",
+    "@compyl/contracts": "workspace:*",
     "zod": "^4.3.6"
   },
   "devDependencies": {

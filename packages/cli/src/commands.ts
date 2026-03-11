@@ -6,8 +6,8 @@
  * to ensure contract consistency.
  */
 
-import type { ApiClient } from "@reviewlayer/mcp-server";
-import type { AgentTokenPermission } from "@reviewlayer/contracts";
+import type { ApiClient } from "@compyl/mcp-server";
+import type { AgentTokenPermission } from "@compyl/contracts";
 import { createCliAuditEvent, type CliAuditEmitter } from "./audit.js";
 
 export interface CommandContext {
@@ -93,7 +93,7 @@ async function audited<T>(
   }
 }
 
-/** `reviewlayer pull` — fetch bundles for a project. */
+/** `compyl pull` — fetch bundles for a project. */
 export async function pullCommand(
   ctx: CommandContext,
   args: { project_id: string; status?: string; limit?: number },
@@ -103,7 +103,7 @@ export async function pullCommand(
   );
 }
 
-/** `reviewlayer bundle <id>` — get a single bundle. */
+/** `compyl bundle <id>` — get a single bundle. */
 export async function bundleCommand(
   ctx: CommandContext,
   args: { bundle_id: string },
@@ -113,7 +113,7 @@ export async function bundleCommand(
   );
 }
 
-/** `reviewlayer status <bundle_id> <new_status>` — update bundle status. */
+/** `compyl status <bundle_id> <new_status>` — update bundle status. */
 export async function statusCommand(
   ctx: CommandContext,
   args: { bundle_id: string; status: string; reason?: string },
@@ -123,7 +123,7 @@ export async function statusCommand(
   );
 }
 
-/** `reviewlayer plan <bundle_id>` — get acceptance criteria for planning. */
+/** `compyl plan <bundle_id>` — get acceptance criteria for planning. */
 export async function planCommand(
   ctx: CommandContext,
   args: { bundle_id: string },
@@ -133,7 +133,7 @@ export async function planCommand(
   );
 }
 
-/** `reviewlayer push-result <bundle_id>` — propose a resolution. */
+/** `compyl push-result <bundle_id>` — propose a resolution. */
 export async function pushResultCommand(
   ctx: CommandContext,
   args: {
@@ -154,7 +154,7 @@ export async function pushResultCommand(
   );
 }
 
-/** `reviewlayer validate <bundle_id>` — submit validation results. */
+/** `compyl validate <bundle_id>` — submit validation results. */
 export async function validateCommand(
   ctx: CommandContext,
   args: {
@@ -167,7 +167,7 @@ export async function validateCommand(
   );
 }
 
-/** `reviewlayer diff` — search bundles (used for comparing/finding). */
+/** `compyl diff` — search bundles (used for comparing/finding). */
 export async function diffCommand(
   ctx: CommandContext,
   args: { project_id: string; query: string; limit?: number },

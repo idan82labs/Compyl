@@ -22,7 +22,7 @@ Rules:
 - Light palette: stone-50 through stone-900 (Tailwind stone scale)
 - Dark palette: #0C0A09 bg, #171412 surface, #292524 border, #FB923C dark accent
 - Fonts: DM Sans (display/body), JetBrains Mono (code/mono)
-- packages/ui has ZERO imports from @reviewlayer/contracts
+- packages/ui has ZERO imports from @compyl/contracts
 
 Your scope for the rebrand:
 - `packages/ui/src/` (tokens + shared components)

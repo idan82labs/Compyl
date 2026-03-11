@@ -1,5 +1,5 @@
 {
-  "name": "@reviewlayer/e2e",
+  "name": "@compyl/e2e",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,6 +11,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@reviewlayer/contracts": "workspace:*"
+    "@compyl/contracts": "workspace:*"
   }
 }

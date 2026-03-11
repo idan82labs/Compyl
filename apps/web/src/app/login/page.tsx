@@ -1,4 +1,4 @@
-import { Logo } from "@reviewlayer/ui";
+import { Logo } from "@compyl/ui";
 import { LoginForm } from "./login-form";
 
 export default function LoginPage() {

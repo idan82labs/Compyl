@@ -2,7 +2,7 @@
  * API → Worker HTTP client.
  *
  * Implements the provisional API↔Worker contract from CLAUDE.md:
- * - Typed requests/responses from @reviewlayer/contracts
+ * - Typed requests/responses from @compyl/contracts
  * - Idempotency key on every request
  * - Timeout tiers: 30s default, 60s for design diff, 120s for bundle compilation
  * - Retry: up to 3x exponential backoff (1s, 4s, 16s) for retryable errors only
@@ -13,7 +13,7 @@ import type {
   WorkerJobRequest,
   WorkerJobResponse,
   ApiJobDiagnosticEvent,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 
 /** Timeout per job type (ms). */
 const TIMEOUT_MS: Record<WorkerJobType, number> = {

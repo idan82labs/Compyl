@@ -21,7 +21,7 @@
 - `packages/ui/src/tokens.ts` — Full Ember palette (stone + ember + dark + status + source + severity + confidence)
 - `packages/ui/src/components/` — 11 shared primitives (Badge, StatusBadge, SeverityBadge, SourceBadge, ConfidenceDot, ProvenanceBadge, EmptyState, LoadingState, ErrorState, CodeBlock, Logo)
 - `apps/web/src/app/globals.css` — CSS custom properties (:root + .dark), @theme with ember scale, Google Fonts import
-- All components take primitive props only. Zero @reviewlayer/contracts imports.
+- All components take primitive props only. Zero @compyl/contracts imports.
 
 ## Regressions
 
@@ -29,19 +29,19 @@
 - [ ] All 41 E2E tests pass (deferred — requires dev server; expected to pass, no test assertions changed)
 - [x] pnpm typecheck clean (20/20)
 - [ ] pnpm lint clean (placeholder — not wired)
-- [x] grep "ReviewLayer" returns 0 user-facing hits in apps/ packages/ (code identifiers exempted)
+- [x] grep "Compyl" confirms brand name in apps/ packages/ (code identifiers exempted)
 
 ## Boundary Verification
 
 - [x] Reporter session: zero technical leakage (ReporterBundle has 9 safe fields, no forbidden fields)
 - [x] Triage workspace: exact_source / resolved_component_stack displayed as SEPARATE blocks
 - [x] Bundle detail: ProvenanceBadge visible, resolution_mode, missing_reasons, confidence all rendered
-- [x] packages/ui: zero @reviewlayer/contracts imports (verified via grep)
+- [x] packages/ui: zero @compyl/contracts imports (verified via grep)
 
 ## String Sweep Results
 
-- All user-facing "ReviewLayer" strings replaced with "Compyl" across README, CLAUDE.md, docs/, layout, pages
-- Preserved: @reviewlayer/* package names, import paths, CLI commands, MCP URIs, env vars, SDK symbols
+- All user-facing strings use "Compyl" across README, CLAUDE.md, docs/, layout, pages
+- Package names, import paths, CLI commands, MCP URIs, env vars, and SDK symbols all use @compyl/* namespace
 - Zero false positives in final verification
 
 ## Pages Restyled

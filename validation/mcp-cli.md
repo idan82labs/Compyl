@@ -17,7 +17,7 @@
 
 ## AgentAction contract
 
-Defined in `@reviewlayer/contracts`:
+Defined in `@compyl/contracts`:
 - `id`: UUID
 - `timestamp`: ISO 8601
 - `actor_type`: "agent" | "human" | "system"
@@ -51,7 +51,7 @@ Defined in `@reviewlayer/contracts`:
 
 | # | URI template | Description |
 |---|-------------|-------------|
-| 1 | reviewlayer://bundles/{bundleId} | Single bundle |
-| 2 | reviewlayer://projects/{projectId}/bundles | Project bundles |
-| 3 | reviewlayer://sessions/{sessionId} | Session details |
-| 4 | reviewlayer://projects/{projectId}/sessions | Project sessions |
+| 1 | compyl://bundles/{bundleId} | Single bundle |
+| 2 | compyl://projects/{projectId}/bundles | Project bundles |
+| 3 | compyl://sessions/{sessionId} | Session details |
+| 4 | compyl://projects/{projectId}/sessions | Project sessions |

@@ -7,7 +7,7 @@ import type {
   AgentActorType,
   AgentActionStatus,
   ActivityQueryResponse,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 import {
   SourceBadge,
   StatusBadge,
@@ -15,7 +15,7 @@ import {
   ErrorState,
   EmptyState,
   CodeBlock,
-} from "@reviewlayer/ui";
+} from "@compyl/ui";
 
 // =============================================================================
 // Labels

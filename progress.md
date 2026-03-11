@@ -270,7 +270,7 @@
   6. 11 provenance fields absent from annotations, present in bundles
   7. Reporter bundle and annotation responses share consistent exclusion rules
   8. SDK captures data_rl_source for backend, not exposed in reporter responses
-- `packages/sdk/src/provider.tsx` — ReviewLayerProvider with zero-overhead activation
+- `packages/sdk/src/provider.tsx` — CompylProvider with zero-overhead activation
 - `packages/sdk/src/types.ts` — AnnotationPayload, AnnotationMode (reporter-safe types)
 - `packages/react-adapter/src/resolver.ts` — fiber walk resolver (produces resolved_component_stack)
 - `packages/react-adapter/src/kill-switch.ts` — configurable failure rate kill switch
@@ -617,17 +617,17 @@ Still requires live DB:
 
 | Package | Test file | Tests |
 |---------|-----------|-------|
-| @reviewlayer/db | boundary.test.ts | 1 (reporter boundary check) |
-| @reviewlayer/api | boundary-enforcement.test.ts | 3 (reporter exclusion, forbidden completeness, provenance separation) |
-| @reviewlayer/api | annotation-boundaries.test.ts | 8 (structural annotation shape checks) |
-| @reviewlayer/api | annotation-behavioral.test.ts | 8 (Fastify inject: 409/404/201/response shape) |
-| @reviewlayer/api | bundle-pipeline.test.ts | 7 (compiled bundle shape, retrieval boundaries) |
-| @reviewlayer/api | session-submit-pipeline.test.ts | 5 (submit lifecycle: 200/409/404/reporter-safe) |
-| @reviewlayer/react-adapter | kill-switch.test.ts | 4 (trip/reset/threshold) |
-| @reviewlayer/react-adapter | plugin-adapter-integration.test.ts | 8 (cross-package __rlMeta round-trip) |
-| @reviewlayer/react-adapter | runtime-provenance.test.ts | 13 (fiber walk, resolution modes, degradation) |
-| @reviewlayer/swc-plugin | plugin.test.ts | 14 (source markers, metadata, wrappers, no-ancestry) |
-| @reviewlayer/worker-ai | test_jobs.py | 9 (structured results, provenance separation, category) |
+| @compyl/db | boundary.test.ts | 1 (reporter boundary check) |
+| @compyl/api | boundary-enforcement.test.ts | 3 (reporter exclusion, forbidden completeness, provenance separation) |
+| @compyl/api | annotation-boundaries.test.ts | 8 (structural annotation shape checks) |
+| @compyl/api | annotation-behavioral.test.ts | 8 (Fastify inject: 409/404/201/response shape) |
+| @compyl/api | bundle-pipeline.test.ts | 7 (compiled bundle shape, retrieval boundaries) |
+| @compyl/api | session-submit-pipeline.test.ts | 5 (submit lifecycle: 200/409/404/reporter-safe) |
+| @compyl/react-adapter | kill-switch.test.ts | 4 (trip/reset/threshold) |
+| @compyl/react-adapter | plugin-adapter-integration.test.ts | 8 (cross-package __rlMeta round-trip) |
+| @compyl/react-adapter | runtime-provenance.test.ts | 13 (fiber walk, resolution modes, degradation) |
+| @compyl/swc-plugin | plugin.test.ts | 14 (source markers, metadata, wrappers, no-ancestry) |
+| @compyl/worker-ai | test_jobs.py | 9 (structured results, provenance separation, category) |
 | **Total** | **11 test files** | **80 individual assertions** |
 
 ### Runtime provenance proof (Phase D — fiber walk verification)
@@ -717,18 +717,18 @@ Still requires real browser:
 
 | Package | Test file | Tests |
 |---------|-----------|-------|
-| @reviewlayer/db | boundary.test.ts | 1 (reporter boundary check) |
-| @reviewlayer/api | boundary-enforcement.test.ts | 3 (reporter exclusion, forbidden completeness, provenance separation) |
-| @reviewlayer/api | annotation-boundaries.test.ts | 8 (structural annotation shape checks) |
-| @reviewlayer/api | annotation-behavioral.test.ts | 8 (Fastify inject: 409/404/201/response shape) |
-| @reviewlayer/api | bundle-pipeline.test.ts | 7 (compiled bundle shape, retrieval boundaries) |
-| @reviewlayer/api | session-submit-pipeline.test.ts | 5 (submit lifecycle: 200/409/404/reporter-safe) |
-| @reviewlayer/react-adapter | kill-switch.test.ts | 4 (trip/reset/threshold) |
-| @reviewlayer/react-adapter | plugin-adapter-integration.test.ts | 8 (cross-package __rlMeta round-trip) |
-| @reviewlayer/react-adapter | runtime-provenance.test.ts | 13 (fiber walk, resolution modes, degradation) |
-| @reviewlayer/swc-plugin | plugin.test.ts | 14 (source markers, metadata, wrappers, no-ancestry) |
-| @reviewlayer/web | reporter-boundary.test.ts | 4 (UI field safety, category labels, field count) |
-| @reviewlayer/worker-ai | test_jobs.py | 9 (structured results, provenance separation, category) |
+| @compyl/db | boundary.test.ts | 1 (reporter boundary check) |
+| @compyl/api | boundary-enforcement.test.ts | 3 (reporter exclusion, forbidden completeness, provenance separation) |
+| @compyl/api | annotation-boundaries.test.ts | 8 (structural annotation shape checks) |
+| @compyl/api | annotation-behavioral.test.ts | 8 (Fastify inject: 409/404/201/response shape) |
+| @compyl/api | bundle-pipeline.test.ts | 7 (compiled bundle shape, retrieval boundaries) |
+| @compyl/api | session-submit-pipeline.test.ts | 5 (submit lifecycle: 200/409/404/reporter-safe) |
+| @compyl/react-adapter | kill-switch.test.ts | 4 (trip/reset/threshold) |
+| @compyl/react-adapter | plugin-adapter-integration.test.ts | 8 (cross-package __rlMeta round-trip) |
+| @compyl/react-adapter | runtime-provenance.test.ts | 13 (fiber walk, resolution modes, degradation) |
+| @compyl/swc-plugin | plugin.test.ts | 14 (source markers, metadata, wrappers, no-ancestry) |
+| @compyl/web | reporter-boundary.test.ts | 4 (UI field safety, category labels, field count) |
+| @compyl/worker-ai | test_jobs.py | 9 (structured results, provenance separation, category) |
 | **Total** | **12 test files** | **84 individual assertions** |
 
 ### Auth.js integration (Phase B completion — team member auth)
@@ -822,19 +822,19 @@ Still requires real browser:
 
 | Package | Test file | Tests |
 |---------|-----------|-------|
-| @reviewlayer/db | boundary.test.ts | 1 |
-| @reviewlayer/api | boundary-enforcement.test.ts | 3 |
-| @reviewlayer/api | annotation-boundaries.test.ts | 8 |
-| @reviewlayer/api | annotation-behavioral.test.ts | 8 |
-| @reviewlayer/api | bundle-pipeline.test.ts | 7 |
-| @reviewlayer/api | session-submit-pipeline.test.ts | 5 |
-| @reviewlayer/react-adapter | kill-switch.test.ts | 4 |
-| @reviewlayer/react-adapter | plugin-adapter-integration.test.ts | 8 |
-| @reviewlayer/react-adapter | runtime-provenance.test.ts | 13 |
-| @reviewlayer/swc-plugin | plugin.test.ts | 14 |
-| @reviewlayer/web | reporter-boundary.test.ts | 4 |
-| @reviewlayer/web | dual-surface-boundary.test.ts | 5 |
-| @reviewlayer/worker-ai | test_jobs.py | 9 |
+| @compyl/db | boundary.test.ts | 1 |
+| @compyl/api | boundary-enforcement.test.ts | 3 |
+| @compyl/api | annotation-boundaries.test.ts | 8 |
+| @compyl/api | annotation-behavioral.test.ts | 8 |
+| @compyl/api | bundle-pipeline.test.ts | 7 |
+| @compyl/api | session-submit-pipeline.test.ts | 5 |
+| @compyl/react-adapter | kill-switch.test.ts | 4 |
+| @compyl/react-adapter | plugin-adapter-integration.test.ts | 8 |
+| @compyl/react-adapter | runtime-provenance.test.ts | 13 |
+| @compyl/swc-plugin | plugin.test.ts | 14 |
+| @compyl/web | reporter-boundary.test.ts | 4 |
+| @compyl/web | dual-surface-boundary.test.ts | 5 |
+| @compyl/worker-ai | test_jobs.py | 9 |
 | **Total** | **13 test files** | **89 individual assertions** |
 
 ### End-to-end vertical slice PROVEN (Phase E completion)
@@ -892,21 +892,21 @@ Previously "NOT YET PROVEN" → NOW PROVEN:
 
 | Package | Test file | Tests |
 |---------|-----------|-------|
-| @reviewlayer/db | boundary.test.ts | 1 |
-| @reviewlayer/api | boundary-enforcement.test.ts | 3 |
-| @reviewlayer/api | annotation-boundaries.test.ts | 8 |
-| @reviewlayer/api | annotation-behavioral.test.ts | 8 |
-| @reviewlayer/api | bundle-pipeline.test.ts | 7 |
-| @reviewlayer/api | session-submit-pipeline.test.ts | 5 |
-| @reviewlayer/api | vertical-slice.test.ts | 9 |
-| @reviewlayer/react-adapter | kill-switch.test.ts | 4 |
-| @reviewlayer/react-adapter | plugin-adapter-integration.test.ts | 8 |
-| @reviewlayer/react-adapter | runtime-provenance.test.ts | 17 |
-| @reviewlayer/swc-plugin | plugin.test.ts | 14 |
-| @reviewlayer/web | reporter-boundary.test.ts | 4 |
-| @reviewlayer/web | dual-surface-boundary.test.ts | 5 |
-| @reviewlayer/api | worker-diagnostics.test.ts | 8 |
-| @reviewlayer/worker-ai | test_jobs.py | 9 |
+| @compyl/db | boundary.test.ts | 1 |
+| @compyl/api | boundary-enforcement.test.ts | 3 |
+| @compyl/api | annotation-boundaries.test.ts | 8 |
+| @compyl/api | annotation-behavioral.test.ts | 8 |
+| @compyl/api | bundle-pipeline.test.ts | 7 |
+| @compyl/api | session-submit-pipeline.test.ts | 5 |
+| @compyl/api | vertical-slice.test.ts | 9 |
+| @compyl/react-adapter | kill-switch.test.ts | 4 |
+| @compyl/react-adapter | plugin-adapter-integration.test.ts | 8 |
+| @compyl/react-adapter | runtime-provenance.test.ts | 17 |
+| @compyl/swc-plugin | plugin.test.ts | 14 |
+| @compyl/web | reporter-boundary.test.ts | 4 |
+| @compyl/web | dual-surface-boundary.test.ts | 5 |
+| @compyl/api | worker-diagnostics.test.ts | 8 |
+| @compyl/worker-ai | test_jobs.py | 9 |
 | **Total** | **15 test files** | **110 individual assertions** |
 
 ### Worker pipeline diagnostics (Observability — cross-cutting)
@@ -1091,7 +1091,7 @@ File: `tests/e2e/src/developer-triage.spec.ts`
 
 #### What was built
 
-- **AgentAction contract** in `@reviewlayer/contracts`:
+- **AgentAction contract** in `@compyl/contracts`:
   - `AgentActorType`: "agent" | "human" | "system"
   - `AgentActionSource`: "mcp" | "cli" | "api" | "ui"
   - `AgentActionStatus`: "success" | "error" | "denied"
@@ -1099,7 +1099,7 @@ File: `tests/e2e/src/developer-triage.spec.ts`
   - 10 MCP tool input types (`McpListBundlesInput`, `McpGetBundleInput`, etc.)
 
 - **MCP server** (`packages/mcp-server`):
-  - `createReviewLayerMcpServer()` factory — creates McpServer with injected ApiClient + AuditEmitter
+  - `createCompylMcpServer()` factory — creates McpServer with injected ApiClient + AuditEmitter
   - 10 tools: list_bundles, get_bundle, update_bundle_status, assign_bundle, propose_resolution, get_session, list_sessions, search_bundles, get_acceptance_criteria, validate_bundle
   - 4 resource templates: bundle, project_bundles, session, project_sessions
   - Every tool call emits structured AgentAction via AuditEmitter
@@ -1107,7 +1107,7 @@ File: `tests/e2e/src/developer-triage.spec.ts`
   - Read-only tools annotated with `readOnlyHint: true`
   - propose_resolution respects agent policy (propose-only, no close)
   - Zod schemas for all tool inputs with descriptions
-  - stdio binary entry point (`reviewlayer-mcp`)
+  - stdio binary entry point (`compyl-mcp`)
   - HTTP API client for standalone mode
 
 - **Observability**: MCP tool calls now produce real structured AgentAction events (8/11 checkpoints)
@@ -1252,11 +1252,11 @@ File: `tests/e2e/src/developer-triage.spec.ts`
 
 #### Contracts
 
-- Added `AgentTokenPermission` type (`"read" | "readwrite" | "full"`) to `@reviewlayer/contracts`
+- Added `AgentTokenPermission` type (`"read" | "readwrite" | "full"`) to `@compyl/contracts`
 
 #### MCP server scope enforcement
 
-- Added `permission` field to `ReviewLayerMcpServerConfig`
+- Added `permission` field to `CompylMcpServerConfig`
 - `MUTATING_TOOLS` set: update_bundle_status, assign_bundle, propose_resolution, validate_bundle
 - `isToolAllowed()` — blocks mutating tools for "read" tokens
 - `audited()` now checks scope BEFORE executing — denied calls emit `status: "denied"`, `error_code: "SCOPE_DENIED"` audit events
@@ -1606,7 +1606,7 @@ All observability checkpoints now proven:
 
 ---
 
-### 2026-03-11 — Compyl UI Rebrand (ReviewLayer → Compyl)
+### 2026-03-11 — Compyl UI Rebrand (brand rename to Compyl)
 
 - Owner: lead + 5 subagents (design-system-engineer, landing-page-engineer, reporter-ux-engineer, triage-workspace-engineer, visual-critique-agent)
 - Scope: Full visual rebrand — design system, all pages, string sweep
@@ -1622,7 +1622,7 @@ All observability checkpoints now proven:
 - `packages/ui/src/tokens.ts` — Full Ember palette (stone + ember + dark + 9 status + 4 source + 4 severity + confidence)
 - 11 shared components: Badge, StatusBadge, SeverityBadge, SourceBadge, ConfidenceDot, ProvenanceBadge, EmptyState, LoadingState, ErrorState, CodeBlock, Logo
 - `globals.css` — CSS custom properties (:root light + .dark), @theme with ember color scale, DM Sans + JetBrains Mono
-- Constraint verified: packages/ui has ZERO @reviewlayer/contracts imports
+- Constraint verified: packages/ui has ZERO @compyl/contracts imports
 
 #### Phase 2: Parallel Page Restyling (3 subagents, disjoint files)
 - **2A Landing**: Full Compyl landing page (hero, code preview, how-it-works, agent surfaces, trust strip, waitlist form), layout + login restyle
@@ -1632,11 +1632,11 @@ All observability checkpoints now proven:
 #### Phase 3: Bundle Detail Page
 - Full 11-section ExecutionBundle detail page at triage/[bundleId]/
 - Sections: Header, Human Context, Design Delta, Exact Source (SEPARATE), Resolved Ancestry (SEPARATE), Resolution Metadata, Design Candidates, Confidence Model, Acceptance Criteria, Curation Gate, Context
-- Dark mode, all shared components, types from @reviewlayer/contracts
+- Dark mode, all shared components, types from @compyl/contracts
 
 #### Phase 4: Consistency Pass + String Sweep
-- All user-facing "ReviewLayer" → "Compyl" across README, CLAUDE.md, docs/, .env.example, comments
-- Code identifiers preserved (@reviewlayer/* packages, imports, CLI commands, MCP URIs, env vars)
+- All user-facing strings updated to "Compyl" across README, CLAUDE.md, docs/, .env.example, comments
+- Code identifiers preserved (@compyl/* packages, imports, CLI commands, MCP URIs, env vars)
 - Spacing audit: all pages consistent (rounded-lg cards, p-4/p-6 padding, space-y-4/6)
 - State audit: all data-fetching pages use shared LoadingState/EmptyState/ErrorState
 
@@ -1644,8 +1644,8 @@ All observability checkpoints now proven:
 - typecheck: 20/20 PASS
 - unit tests: 209/209 PASS
 - boundary tests: reporter 9 safe fields, developer separate provenance, dual-surface superset
-- contracts constraint: packages/ui has 0 @reviewlayer/contracts imports
-- string sweep: 0 user-facing "ReviewLayer" remaining
+- contracts constraint: packages/ui has 0 @compyl/contracts imports
+- string sweep: all user-facing strings confirmed as "Compyl"
 
 #### Deferred
 - Phase 5 visual critique loop (requires running dev server for screenshots)

@@ -2,9 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: [
-    "@reviewlayer/contracts",
-    "@reviewlayer/ui",
-    "@reviewlayer/config",
+    "@compyl/contracts",
+    "@compyl/ui",
+    "@compyl/config",
   ],
 };
 

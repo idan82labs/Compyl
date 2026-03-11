@@ -1,6 +1,6 @@
 ---
 name: ui-consistency-check
-description: Review changed UI against the ReviewLayer design system, page consistency rules, and reporter/developer language boundaries.
+description: Review changed UI against the Compyl design system, page consistency rules, and reporter/developer language boundaries.
 context: fork
 agent: design-system-engineer
 allowed-tools: Read, Grep, Glob

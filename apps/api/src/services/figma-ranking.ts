@@ -29,7 +29,7 @@ import type {
   RankingSignal,
   ExactSource,
   ResolvedComponentFrame,
-} from "@reviewlayer/contracts";
+} from "@compyl/contracts";
 import type { FigmaClient } from "./figma-client.js";
 
 // =============================================================================

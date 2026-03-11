@@ -6,7 +6,7 @@
  */
 
 import type { FastifyInstance } from "fastify";
-import type { WorkerJobRequest } from "@reviewlayer/contracts";
+import type { WorkerJobRequest } from "@compyl/contracts";
 import { WorkerClient } from "../worker-client.js";
 import { randomUUID } from "node:crypto";
 

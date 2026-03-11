@@ -11,7 +11,7 @@
 import type { FastifyInstance } from "fastify";
 import { randomBytes, createHash } from "node:crypto";
 import { eq, and, gt } from "drizzle-orm";
-import { reviewerInvites, reviewSessions } from "@reviewlayer/db";
+import { reviewerInvites, reviewSessions } from "@compyl/db";
 import { requireAuth } from "../middleware/auth.js";
 
 /** Hash a token for storage. Never store plaintext tokens. */

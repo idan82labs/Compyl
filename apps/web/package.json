@@ -1,5 +1,5 @@
 {
-  "name": "@reviewlayer/web",
+  "name": "@compyl/web",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@auth/core": "^0.34.3",
-    "@reviewlayer/config": "workspace:*",
-    "@reviewlayer/contracts": "workspace:*",
-    "@reviewlayer/ui": "workspace:*",
+    "@compyl/config": "workspace:*",
+    "@compyl/contracts": "workspace:*",
+    "@compyl/ui": "workspace:*",
     "next": "^16.1.6",
     "next-auth": "5.0.0-beta.30",
     "react": "^19.2.4",

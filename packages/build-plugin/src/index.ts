@@ -1,5 +1,5 @@
 /**
- * @reviewlayer/swc-plugin — Build-time instrumentation for Compyl.
+ * @compyl/swc-plugin — Build-time instrumentation for Compyl.
  *
  * OWNERSHIP BOUNDARY:
  * This plugin owns ONLY build-time artifacts:
@@ -17,7 +17,7 @@
  *   These are SEPARATE concerns, NEVER merged.
  */
 
-import type { RlMeta } from "@reviewlayer/contracts";
+import type { RlMeta } from "@compyl/contracts";
 
 // =============================================================================
 // Plugin configuration

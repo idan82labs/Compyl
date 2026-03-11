@@ -19,7 +19,7 @@ import {
   annotations,
   executionBundles,
   reporterBundleColumns,
-} from "@reviewlayer/db";
+} from "@compyl/db";
 import { WorkerClient } from "../worker-client.js";
 import { WorkerErrorRateTracker } from "../worker-error-rate.js";
 import { randomUUID } from "node:crypto";
