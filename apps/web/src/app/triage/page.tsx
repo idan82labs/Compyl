@@ -20,14 +20,14 @@ export default async function TriagePage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <header className="mb-8 flex items-center justify-between border-b pb-4">
+      <header className="mb-8 flex items-center justify-between border-b border-[var(--compyl-border)] pb-4">
         <div>
-          <h1 className="text-2xl font-bold">Triage Workspace</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold">Compyl Triage</h1>
+          <p className="mt-1 text-sm text-[var(--compyl-text-muted)]">
             Review and assign feedback items
           </p>
         </div>
-        <div className="text-sm text-gray-600">{session.user.email}</div>
+        <div className="text-sm text-[var(--compyl-text-muted)]">{session.user.email}</div>
       </header>
       <TriageWorkspace projectId={projectId} />
     </main>

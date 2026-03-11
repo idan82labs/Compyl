@@ -1,5 +1,5 @@
 /**
- * ReviewLayer MCP server implementation.
+ * Compyl MCP server implementation.
  *
  * Uses @modelcontextprotocol/sdk McpServer with registerTool API.
  * Tools are organized by entity type: bundles, sessions, projects.

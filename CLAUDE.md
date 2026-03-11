@@ -1,8 +1,8 @@
-# ReviewLayer — Project Memory (CLAUDE.md)
+# Compyl — Project Memory (CLAUDE.md)
 
 ## Mission
 
-Build ReviewLayer: an AI-native feedback platform that compiles stakeholder visual feedback into execution-ready context (ExecutionBundles) for human developers and AI coding agents.
+Build Compyl: an AI-native feedback platform that compiles stakeholder visual feedback into execution-ready context (ExecutionBundles) for human developers and AI coding agents.
 
 ## Non-negotiable architectural truths
 

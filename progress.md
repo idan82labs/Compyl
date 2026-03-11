@@ -4,15 +4,16 @@
 
 ## Current status snapshot
 
-- **Active milestone**: B COMPLETE, C/D IN PROGRESS, E PROVEN, F IN PROGRESS, G IN PROGRESS, H IN PROGRESS
-- **Active task**: Phase H hardening — H.1 Playwright matrix + security tests PROVEN
+- **Active milestone**: B COMPLETE, C/D IN PROGRESS, E PROVEN, F IN PROGRESS, G IN PROGRESS, H COMPLETE
+- **Active task**: Compyl UI rebrand COMPLETE
 - **Blockers**: None
-- **Latest green validations**: typecheck 20/20, test 20/20 (187 PASS), Playwright 41/41
+- **Latest green validations**: typecheck 20/20, test 20/20 (209 PASS), Playwright 41/41
 - **Observability**: 11/11 COMPLETE
 - **MCP-CLI validation**: 5/5 COMPLETE
 - **Triage workspace**: 6/7 (before/after proven, responsive diff deferred)
-- **Phase H hardening**: H.1 Playwright PROVEN, H.2 security PROVEN, H.3 resilience PROVEN, H.4 live-integration PROVEN
-- **Next planned tasks**: Phase H COMPLETE. Next: real Figma API, Auth.js, Claude worker integration
+- **Phase H hardening**: H.1-H.4 all PROVEN
+- **UI rebrand**: Compyl Ember design system COMPLETE. 11 shared components. All pages restyled. String sweep clean.
+- **Next planned tasks**: Visual critique loop (requires dev server), E2E re-run, real Figma API, Auth.js, Claude worker integration
 
 ## Milestone tracker
 
@@ -1602,3 +1603,52 @@ All observability checkpoints now proven:
 **Total Phase H additions**: 45 tests (23 E2E, 22 unit), 4 code security fixes, DB scripts, validation docs
 
 **Running totals**: typecheck 20/20, unit tests 209 PASS, Playwright 41/41
+
+---
+
+### 2026-03-11 — Compyl UI Rebrand (ReviewLayer → Compyl)
+
+- Owner: lead + 5 subagents (design-system-engineer, landing-page-engineer, reporter-ux-engineer, triage-workspace-engineer, visual-critique-agent)
+- Scope: Full visual rebrand — design system, all pages, string sweep
+
+#### Phase 0: Scaffolding
+- Created visual-critique-agent, landing-page-engineer agents
+- Created visual-critique-loop skill
+- Created visual-critique.spec.ts (6 screenshot specs)
+- Updated design-system-engineer, reporter-ux-engineer, triage-workspace-engineer with brand context
+- Created validation/ui-rebrand.md
+
+#### Phase 1: Design System Foundation
+- `packages/ui/src/tokens.ts` — Full Ember palette (stone + ember + dark + 9 status + 4 source + 4 severity + confidence)
+- 11 shared components: Badge, StatusBadge, SeverityBadge, SourceBadge, ConfidenceDot, ProvenanceBadge, EmptyState, LoadingState, ErrorState, CodeBlock, Logo
+- `globals.css` — CSS custom properties (:root light + .dark), @theme with ember color scale, DM Sans + JetBrains Mono
+- Constraint verified: packages/ui has ZERO @reviewlayer/contracts imports
+
+#### Phase 2: Parallel Page Restyling (3 subagents, disjoint files)
+- **2A Landing**: Full Compyl landing page (hero, code preview, how-it-works, agent surfaces, trust strip, waitlist form), layout + login restyle
+- **2B Reporter**: Session pages restyled with warm stone palette, shared UI components (StatusBadge, Badge, EmptyState, LoadingState, ErrorState). Boundary verified: ReporterBundle still 9 safe fields.
+- **2C Triage**: Dark mode (.dark class), ember accent tabs, shared components throughout (StatusBadge, SeverityBadge, ConfidenceDot, ProvenanceBadge, SourceBadge, CodeBlock). Architectural preservation verified: exact_source/resolved_component_stack separate, curation gate intact.
+
+#### Phase 3: Bundle Detail Page
+- Full 11-section ExecutionBundle detail page at triage/[bundleId]/
+- Sections: Header, Human Context, Design Delta, Exact Source (SEPARATE), Resolved Ancestry (SEPARATE), Resolution Metadata, Design Candidates, Confidence Model, Acceptance Criteria, Curation Gate, Context
+- Dark mode, all shared components, types from @reviewlayer/contracts
+
+#### Phase 4: Consistency Pass + String Sweep
+- All user-facing "ReviewLayer" → "Compyl" across README, CLAUDE.md, docs/, .env.example, comments
+- Code identifiers preserved (@reviewlayer/* packages, imports, CLI commands, MCP URIs, env vars)
+- Spacing audit: all pages consistent (rounded-lg cards, p-4/p-6 padding, space-y-4/6)
+- State audit: all data-fetching pages use shared LoadingState/EmptyState/ErrorState
+
+#### Phase 6: Final Validation
+- typecheck: 20/20 PASS
+- unit tests: 209/209 PASS
+- boundary tests: reporter 9 safe fields, developer separate provenance, dual-surface superset
+- contracts constraint: packages/ui has 0 @reviewlayer/contracts imports
+- string sweep: 0 user-facing "ReviewLayer" remaining
+
+#### Deferred
+- Phase 5 visual critique loop (requires running dev server for screenshots)
+- E2E re-run (expected to pass — no test assertions changed, only styling)
+
+**Running totals**: typecheck 20/20, unit tests 209 PASS, 11 new shared components, 6 pages restyled

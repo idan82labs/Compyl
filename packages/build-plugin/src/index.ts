@@ -1,5 +1,5 @@
 /**
- * @reviewlayer/swc-plugin — Build-time instrumentation for ReviewLayer.
+ * @reviewlayer/swc-plugin — Build-time instrumentation for Compyl.
  *
  * OWNERSHIP BOUNDARY:
  * This plugin owns ONLY build-time artifacts:

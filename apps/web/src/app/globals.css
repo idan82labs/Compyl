@@ -1,1 +1,290 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
 @import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Compyl Ember Design System — CSS Custom Properties
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* Core palette */
+  --compyl-bg: #fafaf9;
+  --compyl-surface: #FFFFFF;
+  --compyl-border: #e7e5e4;
+  --compyl-accent: #EA580C;
+  --compyl-accent-hover: #DC4A04;
+  --compyl-accent-subtle: rgba(234, 88, 12, 0.06);
+  --compyl-text: #1c1917;
+  --compyl-text-muted: #78716c;
+
+  /* Typography */
+  --compyl-font-display: "DM Sans", sans-serif;
+  --compyl-font-code: "JetBrains Mono", monospace;
+
+  /* Status — pending (amber) */
+  --compyl-status-pending-bg: #FFFBEB;
+  --compyl-status-pending-text: #92400E;
+  --compyl-status-pending-border: #FDE68A;
+  --compyl-status-pending-dot: #F59E0B;
+
+  /* Status — approved (emerald) */
+  --compyl-status-approved-bg: #ECFDF5;
+  --compyl-status-approved-text: #065F46;
+  --compyl-status-approved-border: #A7F3D0;
+  --compyl-status-approved-dot: #10B981;
+
+  /* Status — in_progress (orange/ember) */
+  --compyl-status-in-progress-bg: #FFF7ED;
+  --compyl-status-in-progress-text: #9A3412;
+  --compyl-status-in-progress-border: #FED7AA;
+  --compyl-status-in-progress-dot: #F97316;
+
+  /* Status — resolved (green) */
+  --compyl-status-resolved-bg: #F0FDF4;
+  --compyl-status-resolved-text: #166534;
+  --compyl-status-resolved-border: #BBF7D0;
+  --compyl-status-resolved-dot: #22C55E;
+
+  /* Status — rejected (red) */
+  --compyl-status-rejected-bg: #FEF2F2;
+  --compyl-status-rejected-text: #991B1B;
+  --compyl-status-rejected-border: #FECACA;
+  --compyl-status-rejected-dot: #EF4444;
+
+  /* Status — error (red) */
+  --compyl-status-error-bg: #FEF2F2;
+  --compyl-status-error-text: #991B1B;
+  --compyl-status-error-border: #FECACA;
+  --compyl-status-error-dot: #EF4444;
+
+  /* Status — success (green) */
+  --compyl-status-success-bg: #F0FDF4;
+  --compyl-status-success-text: #166534;
+  --compyl-status-success-border: #BBF7D0;
+  --compyl-status-success-dot: #22C55E;
+
+  /* Status — warning (amber) */
+  --compyl-status-warning-bg: #FFFBEB;
+  --compyl-status-warning-text: #92400E;
+  --compyl-status-warning-border: #FDE68A;
+  --compyl-status-warning-dot: #F59E0B;
+
+  /* Status — info (stone) */
+  --compyl-status-info-bg: #fafaf9;
+  --compyl-status-info-text: #44403c;
+  --compyl-status-info-border: #d6d3d1;
+  --compyl-status-info-dot: #78716c;
+
+  /* Source — mcp */
+  --compyl-source-mcp-bg: #FFF7ED;
+  --compyl-source-mcp-text: #9A3412;
+  --compyl-source-mcp-border: #FDBA74;
+  --compyl-source-mcp-dot: #EA580C;
+
+  /* Source — cli */
+  --compyl-source-cli-bg: #ECFDF5;
+  --compyl-source-cli-text: #065F46;
+  --compyl-source-cli-border: #A7F3D0;
+  --compyl-source-cli-dot: #10B981;
+
+  /* Source — api */
+  --compyl-source-api-bg: #FFFBEB;
+  --compyl-source-api-text: #92400E;
+  --compyl-source-api-border: #FDE68A;
+  --compyl-source-api-dot: #F59E0B;
+
+  /* Source — ui */
+  --compyl-source-ui-bg: #fafaf9;
+  --compyl-source-ui-text: #44403c;
+  --compyl-source-ui-border: #d6d3d1;
+  --compyl-source-ui-dot: #78716c;
+
+  /* Severity — critical */
+  --compyl-severity-critical-bg: #FEF2F2;
+  --compyl-severity-critical-text: #991B1B;
+  --compyl-severity-critical-border: #FECACA;
+  --compyl-severity-critical-dot: #EF4444;
+
+  /* Severity — major */
+  --compyl-severity-major-bg: #FFF7ED;
+  --compyl-severity-major-text: #9A3412;
+  --compyl-severity-major-border: #FED7AA;
+  --compyl-severity-major-dot: #EA580C;
+
+  /* Severity — minor */
+  --compyl-severity-minor-bg: #FFFBEB;
+  --compyl-severity-minor-text: #92400E;
+  --compyl-severity-minor-border: #FDE68A;
+  --compyl-severity-minor-dot: #F59E0B;
+
+  /* Severity — suggestion */
+  --compyl-severity-suggestion-bg: #fafaf9;
+  --compyl-severity-suggestion-text: #44403c;
+  --compyl-severity-suggestion-border: #d6d3d1;
+  --compyl-severity-suggestion-dot: #78716c;
+
+  /* Confidence */
+  --compyl-confidence-high: #22C55E;
+  --compyl-confidence-medium: #F59E0B;
+  --compyl-confidence-low: #EF4444;
+}
+
+/* ---------------------------------------------------------------------------
+   Dark mode (class strategy for developer workspace)
+   --------------------------------------------------------------------------- */
+
+.dark {
+  --compyl-bg: #0C0A09;
+  --compyl-surface: #171412;
+  --compyl-border: #292524;
+  --compyl-accent: #FB923C;
+  --compyl-accent-hover: #F97316;
+  --compyl-accent-subtle: rgba(251, 146, 60, 0.08);
+  --compyl-text: #fafaf9;
+  --compyl-text-muted: #a8a29e;
+
+  /* Status — pending */
+  --compyl-status-pending-bg: rgba(245, 158, 11, 0.10);
+  --compyl-status-pending-text: #FCD34D;
+  --compyl-status-pending-border: rgba(245, 158, 11, 0.20);
+  --compyl-status-pending-dot: #F59E0B;
+
+  /* Status — approved */
+  --compyl-status-approved-bg: rgba(16, 185, 129, 0.10);
+  --compyl-status-approved-text: #6EE7B7;
+  --compyl-status-approved-border: rgba(16, 185, 129, 0.20);
+  --compyl-status-approved-dot: #10B981;
+
+  /* Status — in_progress */
+  --compyl-status-in-progress-bg: rgba(249, 115, 22, 0.10);
+  --compyl-status-in-progress-text: #FDBA74;
+  --compyl-status-in-progress-border: rgba(249, 115, 22, 0.20);
+  --compyl-status-in-progress-dot: #F97316;
+
+  /* Status — resolved */
+  --compyl-status-resolved-bg: rgba(34, 197, 94, 0.10);
+  --compyl-status-resolved-text: #86EFAC;
+  --compyl-status-resolved-border: rgba(34, 197, 94, 0.20);
+  --compyl-status-resolved-dot: #22C55E;
+
+  /* Status — rejected */
+  --compyl-status-rejected-bg: rgba(239, 68, 68, 0.10);
+  --compyl-status-rejected-text: #FCA5A5;
+  --compyl-status-rejected-border: rgba(239, 68, 68, 0.20);
+  --compyl-status-rejected-dot: #EF4444;
+
+  /* Status — error */
+  --compyl-status-error-bg: rgba(239, 68, 68, 0.10);
+  --compyl-status-error-text: #FCA5A5;
+  --compyl-status-error-border: rgba(239, 68, 68, 0.20);
+  --compyl-status-error-dot: #EF4444;
+
+  /* Status — success */
+  --compyl-status-success-bg: rgba(34, 197, 94, 0.10);
+  --compyl-status-success-text: #86EFAC;
+  --compyl-status-success-border: rgba(34, 197, 94, 0.20);
+  --compyl-status-success-dot: #22C55E;
+
+  /* Status — warning */
+  --compyl-status-warning-bg: rgba(245, 158, 11, 0.10);
+  --compyl-status-warning-text: #FCD34D;
+  --compyl-status-warning-border: rgba(245, 158, 11, 0.20);
+  --compyl-status-warning-dot: #F59E0B;
+
+  /* Status — info */
+  --compyl-status-info-bg: rgba(168, 162, 158, 0.10);
+  --compyl-status-info-text: #d6d3d1;
+  --compyl-status-info-border: rgba(168, 162, 158, 0.20);
+  --compyl-status-info-dot: #78716c;
+
+  /* Source — mcp */
+  --compyl-source-mcp-bg: rgba(234, 88, 12, 0.10);
+  --compyl-source-mcp-text: #FDBA74;
+  --compyl-source-mcp-border: rgba(234, 88, 12, 0.20);
+  --compyl-source-mcp-dot: #EA580C;
+
+  /* Source — cli */
+  --compyl-source-cli-bg: rgba(16, 185, 129, 0.10);
+  --compyl-source-cli-text: #6EE7B7;
+  --compyl-source-cli-border: rgba(16, 185, 129, 0.20);
+  --compyl-source-cli-dot: #10B981;
+
+  /* Source — api */
+  --compyl-source-api-bg: rgba(245, 158, 11, 0.10);
+  --compyl-source-api-text: #FCD34D;
+  --compyl-source-api-border: rgba(245, 158, 11, 0.20);
+  --compyl-source-api-dot: #F59E0B;
+
+  /* Source — ui */
+  --compyl-source-ui-bg: rgba(168, 162, 158, 0.10);
+  --compyl-source-ui-text: #d6d3d1;
+  --compyl-source-ui-border: rgba(168, 162, 158, 0.20);
+  --compyl-source-ui-dot: #78716c;
+
+  /* Severity — critical */
+  --compyl-severity-critical-bg: rgba(239, 68, 68, 0.10);
+  --compyl-severity-critical-text: #FCA5A5;
+  --compyl-severity-critical-border: rgba(239, 68, 68, 0.20);
+  --compyl-severity-critical-dot: #EF4444;
+
+  /* Severity — major */
+  --compyl-severity-major-bg: rgba(234, 88, 12, 0.10);
+  --compyl-severity-major-text: #FDBA74;
+  --compyl-severity-major-border: rgba(234, 88, 12, 0.20);
+  --compyl-severity-major-dot: #EA580C;
+
+  /* Severity — minor */
+  --compyl-severity-minor-bg: rgba(245, 158, 11, 0.10);
+  --compyl-severity-minor-text: #FCD34D;
+  --compyl-severity-minor-border: rgba(245, 158, 11, 0.20);
+  --compyl-severity-minor-dot: #F59E0B;
+
+  /* Severity — suggestion */
+  --compyl-severity-suggestion-bg: rgba(168, 162, 158, 0.10);
+  --compyl-severity-suggestion-text: #d6d3d1;
+  --compyl-severity-suggestion-border: rgba(168, 162, 158, 0.20);
+  --compyl-severity-suggestion-dot: #78716c;
+
+  /* Confidence (same in dark) */
+  --compyl-confidence-high: #22C55E;
+  --compyl-confidence-medium: #F59E0B;
+  --compyl-confidence-low: #EF4444;
+}
+
+/* ---------------------------------------------------------------------------
+   Tailwind v4 @theme — Ember palette extending Tailwind's theme
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* Ember accent scale */
+  --color-ember-50: #FFF7ED;
+  --color-ember-100: #FFEDD5;
+  --color-ember-200: #FED7AA;
+  --color-ember-300: #FDBA74;
+  --color-ember-400: #FB923C;
+  --color-ember-500: #F97316;
+  --color-ember-600: #EA580C;
+  --color-ember-700: #C2410C;
+  --color-ember-800: #9A3412;
+  --color-ember-900: #7C2D12;
+
+  /* Font families */
+  --font-display: "DM Sans", sans-serif;
+  --font-code: "JetBrains Mono", monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   Base styles
+   --------------------------------------------------------------------------- */
+
+body {
+  font-family: var(--compyl-font-display);
+  background-color: var(--compyl-bg);
+  color: var(--compyl-text);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--compyl-font-code);
+}

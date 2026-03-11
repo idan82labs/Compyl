@@ -2,7 +2,7 @@
 
 ## UX split
 
-ReviewLayer has two product languages:
+Compyl has two product languages:
 
 1. **Reporter language**: semantic, plain, reassuring, non-technical
 2. **Developer language**: explicit, structured, provenance-aware, system-oriented

@@ -1,8 +1,8 @@
-# ReviewLayer
+# Compyl
 
 AI-native visual feedback platform that compiles stakeholder feedback into execution-ready context for developers and AI coding agents.
 
-Reporters point at problems. ReviewLayer resolves what they pointed at, where it lives in code, what the design intent was, and packages it all into an **ExecutionBundle** that developers and AI agents can act on immediately.
+Reporters point at problems. Compyl resolves what they pointed at, where it lives in code, what the design intent was, and packages it all into an **ExecutionBundle** that developers and AI agents can act on immediately.
 
 ## Architecture
 

@@ -7,6 +7,16 @@ import type {
   ResolutionMode,
   BundleStatus,
 } from "@reviewlayer/contracts";
+import {
+  StatusBadge,
+  SeverityBadge,
+  ConfidenceDot,
+  ProvenanceBadge,
+  LoadingState,
+  ErrorState,
+  EmptyState,
+  CodeBlock,
+} from "@reviewlayer/ui";
 
 // =============================================================================
 // Developer bundle type — full technical context
@@ -78,29 +88,26 @@ interface DeveloperBundle {
 }
 
 // =============================================================================
-// Labels
+// Status mapping for StatusBadge (bundle statuses -> StatusBadge keys)
 // =============================================================================
 
-const SEVERITY_COLORS: Record<string, string> = {
-  critical: "bg-red-100 text-red-800",
-  major: "bg-orange-100 text-orange-800",
-  minor: "bg-yellow-100 text-yellow-800",
-  suggestion: "bg-gray-100 text-gray-600",
+const BUNDLE_STATUS_MAP: Record<string, { status: string; label: string }> = {
+  pending_review: { status: "pending", label: "Pending Review" },
+  approved: { status: "approved", label: "Approved" },
+  in_progress: { status: "in_progress", label: "In Progress" },
+  resolved: { status: "resolved", label: "Resolved" },
+  rejected: { status: "rejected", label: "Rejected" },
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  pending_review: "bg-yellow-100 text-yellow-800",
-  approved: "bg-blue-100 text-blue-800",
-  in_progress: "bg-purple-100 text-purple-800",
-  resolved: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
-};
+// =============================================================================
+// Provenance mode mapping for ProvenanceBadge
+// =============================================================================
 
-const MODE_LABELS: Record<string, string> = {
-  fiber_meta: "Fiber + Meta",
-  server_prefix: "Server Prefix",
-  leaf_only: "Leaf Only",
-  heuristic: "Heuristic",
+const MODE_MAP: Record<string, { mode: string; label: string }> = {
+  fiber_meta: { mode: "exact", label: "Fiber + Meta" },
+  server_prefix: { mode: "ancestry", label: "Server Prefix" },
+  leaf_only: { mode: "fallback", label: "Leaf Only" },
+  heuristic: { mode: "heuristic", label: "Heuristic" },
 };
 
 // =============================================================================
@@ -133,25 +140,19 @@ export function TriageList() {
   }, []);
 
   if (loading) {
-    return <div className="py-12 text-center text-gray-500">Loading bundles...</div>;
+    return <LoadingState message="Loading bundles..." />;
   }
 
   if (error) {
-    return (
-      <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-4 text-red-700">
-        {error}
-      </div>
-    );
+    return <ErrorState message={error} />;
   }
 
   if (bundles.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 px-6 py-12 text-center text-gray-500">
-        <p className="text-lg font-medium">No bundles yet</p>
-        <p className="mt-1 text-sm">
-          Submit a review session to generate ExecutionBundles.
-        </p>
-      </div>
+      <EmptyState
+        title="No bundles yet"
+        description="Submit a review session to generate ExecutionBundles."
+      />
     );
   }
 
@@ -197,32 +198,36 @@ function BundleRow({ bundle: initialBundle }: { bundle: DeveloperBundle }) {
     }
   };
 
+  const statusMapping = BUNDLE_STATUS_MAP[bundle.status] ?? {
+    status: bundle.status,
+    label: bundle.status.replace(/_/g, " "),
+  };
+
   return (
-    <article className="rounded-lg border border-gray-200 shadow-sm">
+    <article className="rounded-lg border border-[var(--compyl-border)] shadow-sm">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-start gap-4 p-4 text-left hover:bg-gray-50"
+        className="flex w-full items-start gap-4 p-4 text-left hover:bg-[var(--compyl-surface)]"
       >
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="font-medium">{bundle.title}</h3>
-            <span className={`rounded px-1.5 py-0.5 text-xs ${SEVERITY_COLORS[bundle.severity] ?? ""}`}>
-              {bundle.severity}
-            </span>
-            <span className={`rounded px-1.5 py-0.5 text-xs ${STATUS_COLORS[bundle.status] ?? ""}`}>
-              {bundle.status.replace("_", " ")}
-            </span>
+            <h3 className="font-medium text-[var(--compyl-text)]">{bundle.title}</h3>
+            <SeverityBadge severity={bundle.severity} />
+            <StatusBadge
+              status={statusMapping.status}
+              label={statusMapping.label}
+            />
           </div>
-          <p className="mt-1 text-sm text-gray-600">{bundle.normalized_task}</p>
+          <p className="mt-1 text-sm text-[var(--compyl-text-muted)]">{bundle.normalized_task}</p>
         </div>
-        <div className="text-sm text-gray-400">
-          {expanded ? "▲" : "▼"}
+        <div className="text-sm text-[var(--compyl-text-muted)]">
+          {expanded ? "\u25B2" : "\u25BC"}
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t px-4 pb-4 pt-3">
+        <div className="border-t border-[var(--compyl-border)] px-4 pb-4 pt-3">
           {/* Curation Gate — status actions */}
           <CurationControls
             bundleId={bundle.id}
@@ -259,10 +264,10 @@ function BundleRow({ bundle: initialBundle }: { bundle: DeveloperBundle }) {
 
           {bundle.acceptance_criteria.length > 0 && (
             <div className="mt-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-500">
+              <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
                 Acceptance Criteria
               </h4>
-              <ul className="mt-1 list-disc pl-5 text-sm text-gray-700">
+              <ul className="mt-1 list-disc pl-5 text-sm text-[var(--compyl-text)]">
                 {bundle.acceptance_criteria.map((criterion, i) => (
                   <li key={i}>{criterion}</li>
                 ))}
@@ -282,22 +287,22 @@ function BundleRow({ bundle: initialBundle }: { bundle: DeveloperBundle }) {
 /** Valid next statuses from each current status. */
 const TRANSITIONS: Record<BundleStatus, { status: BundleStatus; label: string; style: string }[]> = {
   pending_review: [
-    { status: "approved", label: "Approve", style: "bg-blue-600 text-white hover:bg-blue-700" },
-    { status: "rejected", label: "Reject", style: "bg-red-100 text-red-700 hover:bg-red-200" },
+    { status: "approved", label: "Approve", style: "bg-[var(--compyl-accent)] text-white hover:opacity-90" },
+    { status: "rejected", label: "Reject", style: "bg-[var(--compyl-status-rejected-bg)] text-[var(--compyl-status-rejected-text)] hover:opacity-90" },
   ],
   approved: [
-    { status: "in_progress", label: "Start Work", style: "bg-purple-600 text-white hover:bg-purple-700" },
-    { status: "pending_review", label: "Return to Review", style: "bg-gray-100 text-gray-700 hover:bg-gray-200" },
+    { status: "in_progress", label: "Start Work", style: "bg-[var(--compyl-status-in-progress-bg)] text-[var(--compyl-status-in-progress-text)] hover:opacity-90" },
+    { status: "pending_review", label: "Return to Review", style: "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)] hover:opacity-90" },
   ],
   in_progress: [
-    { status: "resolved", label: "Mark Resolved", style: "bg-green-600 text-white hover:bg-green-700" },
-    { status: "approved", label: "Unblock", style: "bg-gray-100 text-gray-700 hover:bg-gray-200" },
+    { status: "resolved", label: "Mark Resolved", style: "bg-[var(--compyl-status-resolved-bg)] text-[var(--compyl-status-resolved-text)] hover:opacity-90" },
+    { status: "approved", label: "Unblock", style: "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)] hover:opacity-90" },
   ],
   resolved: [
-    { status: "in_progress", label: "Reopen", style: "bg-orange-100 text-orange-700 hover:bg-orange-200" },
+    { status: "in_progress", label: "Reopen", style: "bg-[var(--compyl-status-warning-bg)] text-[var(--compyl-status-warning-text)] hover:opacity-90" },
   ],
   rejected: [
-    { status: "pending_review", label: "Reopen for Review", style: "bg-yellow-100 text-yellow-700 hover:bg-yellow-200" },
+    { status: "pending_review", label: "Reopen for Review", style: "bg-[var(--compyl-status-pending-bg)] text-[var(--compyl-status-pending-text)] hover:opacity-90" },
   ],
 };
 
@@ -318,7 +323,7 @@ function CurationControls({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs font-medium text-gray-500">Actions:</span>
+      <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Actions:</span>
       {actions.map((action) => (
         <button
           key={action.status}
@@ -330,8 +335,8 @@ function CurationControls({
           {action.label}
         </button>
       ))}
-      {loading && <span className="text-xs text-gray-400">Updating...</span>}
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {loading && <span className="text-xs text-[var(--compyl-text-muted)]">Updating...</span>}
+      {error && <span className="text-xs text-[var(--compyl-status-error-text)]">{error}</span>}
     </div>
   );
 }
@@ -341,25 +346,30 @@ function CurationControls({
 // =============================================================================
 
 function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
+  const modeMapping = MODE_MAP[bundle.resolution_mode] ?? {
+    mode: bundle.resolution_mode,
+    label: bundle.resolution_mode,
+  };
+
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase text-gray-500">
+      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
         Provenance
-        <span className="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-normal text-gray-500">
-          {MODE_LABELS[bundle.resolution_mode] ?? bundle.resolution_mode}
+        <span className="ml-2">
+          <ProvenanceBadge mode={modeMapping.mode} label={modeMapping.label} />
         </span>
       </h4>
 
       {/* Exact Source — build-time, ALWAYS separate */}
       <div className="mt-2">
-        <span className="text-xs font-medium text-gray-500">Exact Source</span>
+        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Exact Source</span>
         {bundle.exact_source ? (
-          <div className="mt-0.5 rounded bg-blue-50 px-2 py-1 font-mono text-xs text-blue-800">
-            {bundle.exact_source.component_name} —{" "}
+          <div className="mt-0.5 rounded bg-[var(--compyl-accent-subtle)] px-2 py-1 font-mono text-xs text-[var(--compyl-accent)]">
+            {bundle.exact_source.component_name} &mdash;{" "}
             {bundle.exact_source.file_path}:{bundle.exact_source.line}
           </div>
         ) : (
-          <div className="mt-0.5 text-xs italic text-gray-400">
+          <div className="mt-0.5 text-xs italic text-[var(--compyl-text-muted)]">
             Not available
             {bundle.missing_reasons.length > 0 && (
               <span className="ml-1">
@@ -372,7 +382,7 @@ function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
 
       {/* Resolved Component Stack — runtime, ALWAYS separate */}
       <div className="mt-3">
-        <span className="text-xs font-medium text-gray-500">
+        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">
           Component Stack ({bundle.resolved_component_stack.length} frames)
         </span>
         {bundle.resolved_component_stack.length > 0 ? (
@@ -382,25 +392,25 @@ function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
                 key={i}
                 className={`rounded px-2 py-0.5 font-mono text-xs ${
                   frame.is_library
-                    ? "bg-gray-50 text-gray-500"
-                    : "bg-green-50 text-green-800"
+                    ? "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)]"
+                    : "bg-emerald-950/30 text-emerald-400"
                 }`}
               >
                 {frame.component_name}
                 {frame.file_path && (
-                  <span className="ml-1 text-gray-400">
+                  <span className="ml-1 text-[var(--compyl-text-muted)]">
                     {frame.file_path}
                     {frame.line != null ? `:${frame.line}` : ""}
                   </span>
                 )}
                 {frame.is_library && (
-                  <span className="ml-1 text-[10px] text-gray-400">(lib)</span>
+                  <span className="ml-1 text-[10px] text-[var(--compyl-text-muted)]">(lib)</span>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="mt-0.5 text-xs italic text-gray-400">
+          <div className="mt-0.5 text-xs italic text-[var(--compyl-text-muted)]">
             No component stack resolved
           </div>
         )}
@@ -408,7 +418,7 @@ function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
 
       {/* Confidence scores */}
       <div className="mt-3">
-        <span className="text-xs font-medium text-gray-500">Confidence</span>
+        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Confidence</span>
         <div className="mt-0.5 flex gap-3 text-xs">
           <ConfidenceBar label="Component" value={bundle.confidence.component_match} />
           <ConfidenceBar label="Design" value={bundle.confidence.design_match} />
@@ -421,23 +431,24 @@ function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
 
 function ConfidenceBar({ label, value }: { label: string; value: number }) {
   const pct = Math.round(value * 100);
-  const color = pct >= 70 ? "bg-green-500" : pct >= 40 ? "bg-yellow-500" : "bg-red-500";
+  const color =
+    pct >= 70
+      ? "bg-[var(--compyl-confidence-high)]"
+      : pct >= 40
+        ? "bg-[var(--compyl-confidence-medium)]"
+        : "bg-[var(--compyl-confidence-low)]";
   return (
     <div className="flex-1">
-      <div className="flex justify-between text-gray-500">
+      <div className="flex justify-between text-[var(--compyl-text-muted)]">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
-      <div className="mt-0.5 h-1.5 rounded-full bg-gray-200">
+      <div className="mt-0.5 h-1.5 rounded-full bg-[var(--compyl-surface)]">
         <div className={`h-1.5 rounded-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
 }
-
-// =============================================================================
-// Context section — page, selector, candidates
-// =============================================================================
 
 // =============================================================================
 // Design Candidates section — Figma component matches (developer-only)
@@ -452,52 +463,52 @@ function DesignCandidatesSection({
 
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase text-gray-500">
+      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
         Design Candidates
-        <span className="ml-2 text-[10px] font-normal text-gray-400">
+        <span className="ml-2 text-[10px] font-normal text-[var(--compyl-text-muted)]">
           Figma component matches
         </span>
       </h4>
       <div className="mt-1 space-y-1">
         {candidates.map((candidate, i) => (
-          <div key={candidate.component_id} className="rounded border border-gray-100">
+          <div key={candidate.component_id} className="rounded border border-[var(--compyl-border)]">
             <button
               type="button"
               onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
-              className="flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs hover:bg-gray-50"
+              className="flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs hover:bg-[var(--compyl-surface)]"
             >
-              <span className="font-mono font-medium text-gray-800">
+              <span className="font-mono font-medium text-[var(--compyl-text)]">
                 {candidate.component_name}
               </span>
               {candidate.is_code_connect && (
-                <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
+                <span className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">
                   Code Connect
                 </span>
               )}
               <span className="ml-auto flex items-center gap-1">
-                <ConfidenceDot confidence={candidate.confidence} />
-                <span className="text-gray-500">
+                <ConfidenceDot value={candidate.confidence} />
+                <span className="text-[var(--compyl-text-muted)]">
                   {Math.round(candidate.confidence * 100)}%
                 </span>
               </span>
-              <span className="text-gray-400">
-                {expandedIdx === i ? "▲" : "▼"}
+              <span className="text-[var(--compyl-text-muted)]">
+                {expandedIdx === i ? "\u25B2" : "\u25BC"}
               </span>
             </button>
             {expandedIdx === i && candidate.ranking_signals && (
-              <div className="border-t border-gray-100 px-2 py-1.5">
-                <span className="text-[10px] font-medium uppercase text-gray-400">
+              <div className="border-t border-[var(--compyl-border)] px-2 py-1.5">
+                <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">
                   Ranking Signals
                 </span>
                 <div className="mt-1 space-y-0.5">
                   {candidate.ranking_signals.map((signal, j) => (
                     <div key={j} className="flex items-center gap-2 text-[11px]">
-                      <span className={signal.matched ? "text-green-600" : "text-gray-400"}>
+                      <span className={signal.matched ? "text-[var(--compyl-confidence-high)]" : "text-[var(--compyl-text-muted)]"}>
                         {signal.matched ? "+" : "-"}
                       </span>
-                      <span className="font-mono text-gray-600">{signal.signal}</span>
+                      <span className="font-mono text-[var(--compyl-text)]">{signal.signal}</span>
                       {signal.detail && (
-                        <span className="truncate text-gray-400">{signal.detail}</span>
+                        <span className="truncate text-[var(--compyl-text-muted)]">{signal.detail}</span>
                       )}
                     </div>
                   ))}
@@ -509,16 +520,6 @@ function DesignCandidatesSection({
       </div>
     </div>
   );
-}
-
-function ConfidenceDot({ confidence }: { confidence: number }) {
-  const color =
-    confidence >= 0.8
-      ? "bg-green-500"
-      : confidence >= 0.5
-        ? "bg-yellow-500"
-        : "bg-red-400";
-  return <span className={`inline-block h-2 w-2 rounded-full ${color}`} />;
 }
 
 // =============================================================================
@@ -533,21 +534,21 @@ function BeforeAfterComparison({ bundle }: { bundle: DeveloperBundle }) {
 
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase text-gray-500">
+      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
         Before / After Comparison
       </h4>
       <div className="mt-2 grid grid-cols-2 gap-4">
         {/* Before: Current implementation (screenshot) */}
         <div>
-          <span className="text-[10px] font-medium uppercase text-gray-400">Current (Before)</span>
+          <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">Current (Before)</span>
           {hasScreenshot ? (
             <img
               src={bundle.screenshot_url!}
               alt="Current implementation screenshot"
-              className="mt-1 max-h-48 rounded border border-gray-200"
+              className="mt-1 max-h-48 rounded border border-[var(--compyl-border)]"
             />
           ) : (
-            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-gray-200 text-xs text-gray-400">
+            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-[var(--compyl-border)] text-xs text-[var(--compyl-text-muted)]">
               No screenshot captured
             </div>
           )}
@@ -555,44 +556,41 @@ function BeforeAfterComparison({ bundle }: { bundle: DeveloperBundle }) {
 
         {/* After: Design reference / diff */}
         <div>
-          <span className="text-[10px] font-medium uppercase text-gray-400">Design Reference (After)</span>
+          <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">Design Reference (After)</span>
           {hasHighConfidenceMatch ? (
-            <div className="mt-1 rounded border border-gray-200 p-2">
+            <div className="mt-1 rounded border border-[var(--compyl-border)] p-2">
               <div className="flex items-center gap-2 text-xs">
-                <span className="font-mono font-medium text-gray-800">
+                <span className="font-mono font-medium text-[var(--compyl-text)]">
                   {topDesignCandidate.component_name}
                 </span>
                 {topDesignCandidate.is_code_connect && (
-                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] text-emerald-700">
+                  <span className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] text-emerald-400">
                     Code Connect
                   </span>
                 )}
-                <span className="text-gray-500">
+                <span className="text-[var(--compyl-text-muted)]">
                   {Math.round(topDesignCandidate.confidence * 100)}% match
                 </span>
               </div>
               {hasDiff ? (
                 <div className="mt-2">
-                  <span className="text-[10px] font-medium text-gray-500">Style Differences</span>
-                  <div className="mt-1 space-y-0.5">
-                    {Object.entries(bundle.design_diff!).map(([prop, value]) => (
-                      <div key={prop} className="flex gap-2 font-mono text-[11px]">
-                        <span className="text-red-600">{prop}:</span>
-                        <span className="text-gray-700">{String(value)}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <span className="text-[10px] font-medium text-[var(--compyl-text-muted)]">Style Differences</span>
+                  <CodeBlock language="diff">
+                    {Object.entries(bundle.design_diff!).map(([prop, value]) =>
+                      `${prop}: ${String(value)}`
+                    ).join("\n")}
+                  </CodeBlock>
                 </div>
               ) : (
-                <div className="mt-2 text-[11px] text-gray-400">
+                <div className="mt-2 text-[11px] text-[var(--compyl-text-muted)]">
                   No style differences computed yet
                 </div>
               )}
             </div>
           ) : (
-            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-gray-200 text-xs text-gray-400">
+            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-[var(--compyl-border)] text-xs text-[var(--compyl-text-muted)]">
               {topDesignCandidate
-                ? `Low confidence match (${Math.round(topDesignCandidate.confidence * 100)}%) — diff not computed`
+                ? `Low confidence match (${Math.round(topDesignCandidate.confidence * 100)}%) \u2014 diff not computed`
                 : "No Figma design match available"}
             </div>
           )}
@@ -609,38 +607,38 @@ function BeforeAfterComparison({ bundle }: { bundle: DeveloperBundle }) {
 function ContextSection({ bundle }: { bundle: DeveloperBundle }) {
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase text-gray-500">Context</h4>
+      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">Context</h4>
 
       <div className="mt-2 space-y-2 text-xs">
         <div>
-          <span className="font-medium text-gray-500">Page: </span>
-          <span className="text-gray-700">{bundle.page_url}</span>
+          <span className="font-medium text-[var(--compyl-text-muted)]">Page: </span>
+          <span className="text-[var(--compyl-text)]">{bundle.page_url}</span>
         </div>
         <div>
-          <span className="font-medium text-gray-500">Selector: </span>
-          <code className="rounded bg-gray-100 px-1 py-0.5 text-gray-700">
+          <span className="font-medium text-[var(--compyl-text-muted)]">Selector: </span>
+          <code className="rounded bg-[var(--compyl-surface)] px-1 py-0.5 text-[var(--compyl-text)]">
             {bundle.dom_selector}
           </code>
         </div>
         <div>
-          <span className="font-medium text-gray-500">Category: </span>
-          <span className="text-gray-700">{bundle.category}</span>
+          <span className="font-medium text-[var(--compyl-text-muted)]">Category: </span>
+          <span className="text-[var(--compyl-text)]">{bundle.category}</span>
         </div>
       </div>
 
       {bundle.component_candidates.length > 0 && (
         <div className="mt-3">
-          <span className="text-xs font-medium text-gray-500">
+          <span className="text-xs font-medium text-[var(--compyl-text-muted)]">
             Component Candidates
           </span>
           <div className="mt-0.5 space-y-0.5">
             {bundle.component_candidates.map((c, i) => (
               <div key={i} className="flex items-center gap-2 text-xs">
-                <span className="font-mono text-gray-700">{c.component_name}</span>
+                <span className="font-mono text-[var(--compyl-text)]">{c.component_name}</span>
                 {c.file_path && (
-                  <span className="text-gray-400">{c.file_path}</span>
+                  <span className="text-[var(--compyl-text-muted)]">{c.file_path}</span>
                 )}
-                <span className="rounded bg-gray-100 px-1 py-0.5 text-gray-500">
+                <span className="rounded bg-[var(--compyl-surface)] px-1 py-0.5 text-[var(--compyl-text-muted)]">
                   {Math.round(c.confidence * 100)}%
                 </span>
               </div>
@@ -651,11 +649,11 @@ function ContextSection({ bundle }: { bundle: DeveloperBundle }) {
 
       {bundle.screenshot_url && (
         <div className="mt-3">
-          <span className="text-xs font-medium text-gray-500">Screenshot</span>
+          <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Screenshot</span>
           <img
             src={bundle.screenshot_url}
             alt="Screenshot"
-            className="mt-1 max-h-32 rounded border"
+            className="mt-1 max-h-32 rounded border border-[var(--compyl-border)]"
           />
         </div>
       )}

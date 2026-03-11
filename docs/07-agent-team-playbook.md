@@ -9,7 +9,7 @@ Use experimental agent teams only for bounded, parallelizable work where file ow
 
 Agent teams are powerful but experimental. They carry coordination overhead, use materially more tokens, and are best when teammates can work independently and message each other. Do not make them the default for every feature.
 
-## Best team shapes for ReviewLayer
+## Best team shapes for Compyl
 
 ### Shape A — Parallel research/review
 
@@ -57,7 +57,7 @@ For risky tasks, ask the lead to require plan approval before a teammate writes 
 
 ## Recommended kickoff prompt for the lead
 
-"Create a build program for ReviewLayer. Use focused subagents by default and only create an agent team when the task truly benefits from parallel work. Keep file ownership disjoint. Require plan approval before DB, auth, runtime adapter, or hook changes. Wait for teammates to finish before synthesizing."
+"Create a build program for Compyl. Use focused subagents by default and only create an agent team when the task truly benefits from parallel work. Keep file ownership disjoint. Require plan approval before DB, auth, runtime adapter, or hook changes. Wait for teammates to finish before synthesizing."
 
 ## Example agent-team prompt
 

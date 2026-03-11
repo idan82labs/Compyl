@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ReviewLayer",
-  description: "AI-native visual feedback platform",
+  title: "Compyl",
+  description: "The task compiler for the age of AI agents",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white text-gray-900 antialiased">{children}</body>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }

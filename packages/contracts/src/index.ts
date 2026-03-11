@@ -1,7 +1,7 @@
 /**
  * @reviewlayer/contracts
  *
- * Single source of truth for all shared types across the ReviewLayer system.
+ * Single source of truth for all shared types across the Compyl system.
  * Every package imports from here — no ad-hoc type definitions allowed.
  *
  * NAMING DISCIPLINE:
@@ -185,7 +185,7 @@ export interface ComponentCandidate {
 }
 
 /**
- * The ExecutionBundle — ReviewLayer's central data object.
+ * The ExecutionBundle — Compyl's central data object.
  * Every feedback item produces one. Rendered into reporter summary,
  * developer task, and agent-ready execution context.
  *

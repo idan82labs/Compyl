@@ -29,9 +29,20 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border bg-white p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-lg border p-6 shadow-sm"
+      style={{
+        borderColor: "var(--compyl-border)",
+        backgroundColor: "var(--compyl-surface)",
+      }}
+    >
       <div className="mb-4">
-        <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="email"
+          className="mb-1 block text-sm font-medium"
+          style={{ color: "var(--compyl-text)" }}
+        >
           Email
         </label>
         <input
@@ -40,13 +51,22 @@ export function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded border px-3 py-2 text-sm outline-none transition-colors focus:border-ember-600 focus:ring-1 focus:ring-ember-600"
+          style={{
+            borderColor: "var(--compyl-border)",
+            backgroundColor: "var(--compyl-surface)",
+            color: "var(--compyl-text)",
+          }}
           placeholder="you@company.com"
         />
       </div>
 
       <div className="mb-4">
-        <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="password"
+          className="mb-1 block text-sm font-medium"
+          style={{ color: "var(--compyl-text)" }}
+        >
           Password
         </label>
         <input
@@ -55,7 +75,12 @@ export function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded border px-3 py-2 text-sm outline-none transition-colors focus:border-ember-600 focus:ring-1 focus:ring-ember-600"
+          style={{
+            borderColor: "var(--compyl-border)",
+            backgroundColor: "var(--compyl-surface)",
+            color: "var(--compyl-text)",
+          }}
         />
       </div>
 
@@ -68,7 +93,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="w-full rounded bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-800 disabled:opacity-50"
       >
         {loading ? "Signing in..." : "Sign in"}
       </button>

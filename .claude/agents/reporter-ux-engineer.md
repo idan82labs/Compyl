@@ -15,3 +15,10 @@ Rules:
 - Default actions must be obvious.
 - Clarifications must be plain language.
 - If a screen would confuse a PM or client, redesign it.
+
+## Compyl Rebrand
+
+- Replace all blue/gray status colors with Ember-warm palette
+- Use shared components from packages/ui (Badge, EmptyState, LoadingState, ErrorState)
+- Reporter pages stay LIGHT mode (warm stone background)
+- Category labels stay semantic (no "visual_bug", use "Visual Issue")

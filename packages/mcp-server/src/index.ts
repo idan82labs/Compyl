@@ -1,7 +1,7 @@
 /**
  * @reviewlayer/mcp-server
  *
- * MCP server for ReviewLayer. Exposes ExecutionBundles, sessions, and projects
+ * MCP server for Compyl. Exposes ExecutionBundles, sessions, and projects
  * as tools and resources for AI coding agents (Claude Code, Cursor, Codex).
  *
  * Every tool call emits a structured AgentAction audit event via the

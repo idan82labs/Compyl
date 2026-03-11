@@ -1,7 +1,7 @@
 /**
  * Fastify application factory.
  *
- * Creates and configures the ReviewLayer API server.
+ * Creates and configures the Compyl API server.
  * All routes use typed contracts from @reviewlayer/contracts.
  * DB instance is decorated onto the Fastify instance for route access.
  */

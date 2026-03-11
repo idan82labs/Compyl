@@ -2,7 +2,7 @@
  * HTTP API client for the MCP server.
  *
  * Implements the ApiClient interface by making real HTTP requests
- * to the ReviewLayer API server. Used in standalone/stdio mode.
+ * to the Compyl API server. Used in standalone/stdio mode.
  *
  * In embedded mode (e.g. inside the Fastify API process), the host
  * can provide a direct in-process ApiClient instead.

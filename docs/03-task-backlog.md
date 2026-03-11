@@ -145,7 +145,7 @@ Owner: app-shell-engineer
 
 ## Wave 3 — Review runtime + annotation capture
 
-### T3.1 ReviewLayerProvider and token activation
+### T3.1 CompylProvider and token activation
 
 Owner: annotation-sdk-engineer
 

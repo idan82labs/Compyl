@@ -2,7 +2,7 @@
 
 ## Goal
 
-Ship the first production-grade ReviewLayer core: reviewer feedback on staging -> ExecutionBundle -> developer triage -> agent-ready execution context -> validation -> re-review.
+Ship the first production-grade Compyl core: reviewer feedback on staging -> ExecutionBundle -> developer triage -> agent-ready execution context -> validation -> re-review.
 
 ## What is in scope
 

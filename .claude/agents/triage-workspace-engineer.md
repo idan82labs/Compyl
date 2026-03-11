@@ -17,3 +17,11 @@ Rules:
 - Make confidence and missing reasons obvious — use `resolution_mode` and `missing_reasons` from contracts types.
 - Do not let the curation gate disappear into convenience automation.
 - Use types from `packages/contracts` for all provenance display logic.
+
+## Compyl Rebrand
+
+- Triage workspace uses DARK warm palette (.dark class wrapper)
+- Replace blue-500 tab accent with Ember
+- Use shared components from packages/ui
+- Build the full bundle detail page at triage/[bundleId]/
+- Import all types from @reviewlayer/contracts, never re-define locally

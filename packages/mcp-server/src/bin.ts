@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * ReviewLayer MCP server — stdio entry point.
+ * Compyl MCP server — stdio entry point.
  *
  * Usage: reviewlayer-mcp [--api-url <url>] [--token <agent-token>]
  *
  * Env vars:
- * - REVIEWLAYER_API_URL: Base URL for the ReviewLayer API (default: http://localhost:3001)
+ * - REVIEWLAYER_API_URL: Base URL for the Compyl API (default: http://localhost:3001)
  * - REVIEWLAYER_AGENT_TOKEN: Agent token for authentication
  */
 

@@ -2,7 +2,7 @@
 /**
  * @reviewlayer/cli
  *
- * CLI for ReviewLayer. Every command emits structured AgentAction events
+ * CLI for Compyl. Every command emits structured AgentAction events
  * via the same audit contract as the MCP server.
  *
  * Usage:

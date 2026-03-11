@@ -8,6 +8,7 @@ type Tab = "bundles" | "activity";
 
 /**
  * Developer triage workspace — tab container.
+ * Wrapped in .dark for Compyl Ember dark palette.
  *
  * Tabs:
  * - Bundles: ExecutionBundle list (default)
@@ -17,9 +18,15 @@ export function TriageWorkspace({ projectId }: { projectId: string }) {
   const [activeTab, setActiveTab] = useState<Tab>("bundles");
 
   return (
-    <div>
+    <div
+      className="dark min-h-screen rounded-lg"
+      style={{
+        backgroundColor: "var(--compyl-bg)",
+        color: "var(--compyl-text)",
+      }}
+    >
       {/* Tab bar */}
-      <div className="mb-6 flex gap-1 border-b border-gray-200">
+      <div className="mb-6 flex gap-1 border-b border-[var(--compyl-border)]">
         <TabButton
           label="Bundles"
           active={activeTab === "bundles"}
@@ -54,8 +61,8 @@ function TabButton({
       onClick={onClick}
       className={`px-4 py-2 text-sm font-medium transition-colors ${
         active
-          ? "border-b-2 border-blue-500 text-blue-600"
-          : "text-gray-500 hover:text-gray-700"
+          ? "border-b-2 border-[var(--compyl-accent)] text-[var(--compyl-accent)]"
+          : "text-[var(--compyl-text-muted)] hover:text-[var(--compyl-text)]"
       }`}
     >
       {label}

@@ -28,6 +28,7 @@ Thumbs.db
 coverage/
 test-results/
 playwright-report/
+tests/e2e/screenshots/
 
 # Python (worker-ai)
 apps/worker-ai/__pycache__/

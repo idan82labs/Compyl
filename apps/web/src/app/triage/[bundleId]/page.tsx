@@ -1,5 +1,6 @@
 import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
+import { BundleDetail } from "./bundle-detail";
 
 interface Props {
   params: Promise<{ bundleId: string }>;
@@ -28,18 +29,31 @@ export default async function BundleDetailPage({ params }: Props) {
   const { bundleId } = await params;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8">
-      <header className="mb-6 border-b pb-4">
-        <a href="/triage" className="text-sm text-blue-600 hover:underline">
-          &larr; Back to triage
-        </a>
-        <h1 className="mt-2 text-2xl font-bold">Bundle Detail</h1>
-        <p className="text-sm text-gray-500 font-mono">{bundleId}</p>
-      </header>
-      <p className="text-gray-500">
-        Full ExecutionBundle view coming soon. This page will show the complete
-        developer context including separate exact_source and resolved_component_stack.
-      </p>
+    <main className="mx-auto max-w-5xl px-4 py-8">
+      <div
+        className="dark min-h-screen rounded-lg p-6"
+        style={{
+          backgroundColor: "var(--compyl-bg)",
+          color: "var(--compyl-text)",
+        }}
+      >
+        <header className="mb-8 border-b border-[var(--compyl-border)] pb-4">
+          <a
+            href="/triage"
+            className="inline-flex items-center gap-1 text-sm text-[var(--compyl-accent)] hover:underline"
+          >
+            &larr; Back to Compyl Triage
+          </a>
+          <h1 className="mt-2 text-2xl font-bold text-[var(--compyl-text)]">
+            Compyl Bundle Detail
+          </h1>
+          <p className="mt-1 font-mono text-sm text-[var(--compyl-text-muted)]">
+            {bundleId}
+          </p>
+        </header>
+
+        <BundleDetail bundleId={bundleId} />
+      </div>
     </main>
   );
 }

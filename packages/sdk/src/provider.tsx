@@ -81,7 +81,7 @@ export function ReviewLayerProvider({
         }
       } catch {
         // SDK fails silently — graceful degradation
-        console.warn("[ReviewLayer] Failed to activate session");
+        console.warn("[Compyl] Failed to activate session");
       }
     };
 

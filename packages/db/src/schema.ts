@@ -1,5 +1,5 @@
 /**
- * ReviewLayer — Drizzle ORM Schema
+ * Compyl — Drizzle ORM Schema
  *
  * Domain model for all core entities.
  * Provenance discipline:

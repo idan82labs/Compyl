@@ -1,6 +1,6 @@
 # Agent Happy Paths — Claude Code, Cursor, Codex
 
-How AI coding agents integrate with ReviewLayer via MCP and CLI.
+How AI coding agents integrate with Compyl via MCP and CLI.
 
 ## MCP Integration (Claude Code, Cursor)
 
