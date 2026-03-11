@@ -16,23 +16,18 @@ export function Logo({ size = "md", wordmark = true }: LogoProps) {
 
   return (
     <span className={`inline-flex items-center ${s.gap}`}>
-      {/* Mark: stylized "C" bracket with ember accent */}
+      {/* Mark: stacked compilation bars */}
       <svg
         width={s.mark}
         height={s.mark}
-        viewBox="0 0 32 32"
+        viewBox="0 0 20 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <rect width="32" height="32" rx="8" fill="var(--compyl-accent)" />
-        <path
-          d="M20 10L13 16L20 22"
-          stroke="white"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <rect x="2" y="3" width="11" height="2.5" rx="1.25" fill="var(--compyl-accent)" opacity="0.4" />
+        <rect x="4" y="8" width="14" height="2.5" rx="1.25" fill="var(--compyl-accent)" opacity="0.65" />
+        <rect x="3" y="13" width="10" height="2.5" rx="1.25" fill="var(--compyl-accent)" />
       </svg>
       {wordmark && (
         <span
