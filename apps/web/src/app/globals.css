@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 @import "tailwindcss";
 
@@ -18,7 +18,8 @@
   --compyl-text-muted: #78716c;
 
   /* Typography */
-  --compyl-font-display: "Space Grotesk", sans-serif;
+  --compyl-font-display: "Plus Jakarta Sans", sans-serif;
+  --compyl-font-body: "Inter", -apple-system, sans-serif;
   --compyl-font-code: "JetBrains Mono", monospace;
 
   /* Status — pending (amber) */
@@ -269,7 +270,8 @@
   --color-ember-900: #7C2D12;
 
   /* Font families */
-  --font-display: "Space Grotesk", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", -apple-system, sans-serif;
   --font-code: "JetBrains Mono", monospace;
 }
 
@@ -278,9 +280,13 @@
    --------------------------------------------------------------------------- */
 
 body {
-  font-family: var(--compyl-font-display);
+  font-family: var(--compyl-font-body);
   background-color: var(--compyl-bg);
   color: var(--compyl-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--compyl-font-display);
 }
 
 code,

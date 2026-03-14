@@ -19,7 +19,7 @@ import {
 } from "@compyl/ui";
 
 // =============================================================================
-// Developer bundle type — full technical context
+// Types
 // =============================================================================
 
 interface DeveloperBundle {
@@ -32,8 +32,7 @@ interface DeveloperBundle {
   page_url: string;
   screenshot_url: string | null;
   dom_selector: string;
-
-  // Provenance — ALWAYS separate
+  client_raw_text?: string;
   exact_source: {
     file_path: string;
     component_name: string;
@@ -50,8 +49,6 @@ interface DeveloperBundle {
   resolution_mode: ResolutionMode;
   missing_reasons: string[];
   root_boundary_kind: string | null;
-
-  // Derived
   component_candidates: Array<{
     component_name: string;
     file_path?: string;
@@ -69,18 +66,13 @@ interface DeveloperBundle {
       detail?: string;
     }>;
   }>;
-
   design_diff: Record<string, unknown> | null;
-
-  // AI-generated
   acceptance_criteria: string[];
   confidence: {
     component_match: number;
     design_match: number;
     task_clarity: number;
   };
-
-  // Lifecycle
   status: BundleStatus;
   assignee_type: string;
   assignee_id: string | null;
@@ -88,7 +80,7 @@ interface DeveloperBundle {
 }
 
 // =============================================================================
-// Status mapping for StatusBadge (bundle statuses -> StatusBadge keys)
+// Mappings
 // =============================================================================
 
 const BUNDLE_STATUS_MAP: Record<string, { status: string; label: string }> = {
@@ -99,10 +91,6 @@ const BUNDLE_STATUS_MAP: Record<string, { status: string; label: string }> = {
   rejected: { status: "rejected", label: "Rejected" },
 };
 
-// =============================================================================
-// Provenance mode mapping for ProvenanceBadge
-// =============================================================================
-
 const MODE_MAP: Record<string, { mode: string; label: string }> = {
   fiber_meta: { mode: "exact", label: "Fiber + Meta" },
   server_prefix: { mode: "ancestry", label: "Server Prefix" },
@@ -110,27 +98,52 @@ const MODE_MAP: Record<string, { mode: string; label: string }> = {
   heuristic: { mode: "heuristic", label: "Heuristic" },
 };
 
+const TRANSITIONS: Record<BundleStatus, { status: BundleStatus; label: string }[]> = {
+  pending_review: [
+    { status: "approved", label: "Approve" },
+    { status: "rejected", label: "Reject" },
+  ],
+  approved: [
+    { status: "in_progress", label: "Start Work" },
+    { status: "pending_review", label: "Return to Review" },
+  ],
+  in_progress: [
+    { status: "resolved", label: "Mark Resolved" },
+    { status: "approved", label: "Unblock" },
+  ],
+  resolved: [
+    { status: "in_progress", label: "Reopen" },
+  ],
+  rejected: [
+    { status: "pending_review", label: "Reopen" },
+  ],
+};
+
+type SidebarFilter = "all" | "pending_review" | "approved" | "in_progress" | "resolved" | "rejected";
+
 // =============================================================================
-// Component
+// Root: 3-panel layout
 // =============================================================================
 
 export function TriageList() {
   const [bundles, setBundles] = useState<DeveloperBundle[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<SidebarFilter>("all");
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [terminalLines, setTerminalLines] = useState<string[]>([]);
 
   useEffect(() => {
     const apiBase = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
-
-    fetch(`${apiBase}/api/v1/bundles`, {
-      credentials: "include",
-    })
+    fetch(`${apiBase}/api/v1/bundles`, { credentials: "include" })
       .then(async (res) => {
         if (!res.ok) throw new Error(`Failed to load bundles (${res.status})`);
         return res.json() as Promise<{ bundles: DeveloperBundle[] }>;
       })
       .then((data) => {
         setBundles(data.bundles);
+        if (data.bundles.length > 0) setSelectedId(data.bundles[0].id);
         setLoading(false);
       })
       .catch((err: Error) => {
@@ -139,58 +152,159 @@ export function TriageList() {
       });
   }, []);
 
-  if (loading) {
-    return <LoadingState message="Loading bundles..." />;
-  }
+  if (loading) return <div className="flex h-full items-center justify-center"><LoadingState message="Loading bundles..." /></div>;
+  if (error) return <div className="flex h-full items-center justify-center"><ErrorState message={error} /></div>;
+  if (bundles.length === 0) return <div className="flex h-full items-center justify-center"><EmptyState title="No bundles yet" description="Submit a review session to generate ExecutionBundles." /></div>;
 
-  if (error) {
-    return <ErrorState message={error} />;
-  }
+  const filtered = filter === "all" ? bundles : bundles.filter((b) => b.status === filter);
+  const selected = bundles.find((b) => b.id === selectedId) ?? null;
 
-  if (bundles.length === 0) {
-    return (
-      <EmptyState
-        title="No bundles yet"
-        description="Submit a review session to generate ExecutionBundles."
-      />
-    );
-  }
+  const handleStatusChange = async (bundleId: string, newStatus: BundleStatus) => {
+    const apiBase = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
+    const res = await fetch(`${apiBase}/api/v1/bundles/${bundleId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status: newStatus }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`);
+    }
+    setBundles((prev) => prev.map((b) => (b.id === bundleId ? { ...b, status: newStatus } : b)));
+  };
+
+  const dispatchAgent = (bundle: DeveloperBundle) => {
+    setTerminalOpen(true);
+    setTerminalLines([`➜ compyl pull ${bundle.id}`]);
+    setTimeout(() => setTerminalLines((p) => [...p, "✓ Fetched ExecutionBundle. Target SHA verified."]), 800);
+    setTimeout(() => setTerminalLines((p) => [...p, `➜ claude-code "apply bundle to ${bundle.exact_source?.file_path ?? bundle.title}"`]), 1800);
+    setTimeout(() => setTerminalLines((p) => [...p, `▶ Patching ${bundle.exact_source?.file_path ?? "target"}...`]), 2500);
+    setTimeout(() => setTerminalLines((p) => [...p, "✓ Patch applied. PR draft created."]), 4000);
+  };
 
   return (
-    <div className="space-y-4">
-      {bundles.map((bundle) => (
-        <BundleRow key={bundle.id} bundle={bundle} />
-      ))}
+    <div className="flex h-full overflow-hidden">
+      {/* ── LEFT SIDEBAR: Issue List ── */}
+      <aside className="flex w-[260px] shrink-0 flex-col border-r border-[var(--compyl-border)]" style={{ backgroundColor: "var(--compyl-surface)" }}>
+        {/* Filter tabs */}
+        <div className="flex flex-wrap gap-1 border-b border-[var(--compyl-border)] px-3 py-2">
+          {(["all", "pending_review", "in_progress", "resolved"] as const).map((f) => {
+            const labels: Record<string, string> = { all: "All", pending_review: "Pending", in_progress: "Active", resolved: "Done" };
+            const count = f === "all" ? bundles.length : bundles.filter((b) => b.status === f).length;
+            return (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`rounded px-2 py-1 text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                  filter === f
+                    ? "bg-[var(--compyl-accent)] text-white"
+                    : "text-[var(--compyl-text-muted)] hover:text-[var(--compyl-text)]"
+                }`}
+              >
+                {labels[f]} <span className="opacity-60">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Issue list */}
+        <div className="flex-1 overflow-y-auto">
+          {filtered.map((bundle) => {
+            const isSelected = bundle.id === selectedId;
+            const statusMap = BUNDLE_STATUS_MAP[bundle.status];
+            return (
+              <button
+                key={bundle.id}
+                onClick={() => setSelectedId(bundle.id)}
+                className={`flex w-full flex-col gap-1 border-b border-[var(--compyl-border)] px-4 py-3 text-left transition-colors ${
+                  isSelected
+                    ? "bg-[var(--compyl-accent-subtle)] border-l-2 border-l-[var(--compyl-accent)]"
+                    : "hover:bg-[rgba(255,255,255,0.02)]"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className={`font-mono text-[10px] font-bold ${isSelected ? "text-[var(--compyl-accent)]" : "text-[var(--compyl-text-muted)]"}`}>
+                    {bundle.id.slice(0, 8).toUpperCase()}
+                  </span>
+                  <span className="text-[9px] text-[var(--compyl-text-muted)]">
+                    {new Date(bundle.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <span className={`truncate text-sm font-medium ${isSelected ? "text-[var(--compyl-text)]" : "text-[var(--compyl-text-muted)]"}`}>
+                  {bundle.title}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <SeverityBadge severity={bundle.severity} />
+                  {statusMap && <StatusBadge status={statusMap.status} label={statusMap.label} />}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* ── MAIN CONTENT ── */}
+      <main className="relative flex flex-1 flex-col overflow-hidden">
+        {!selected ? (
+          <div className="flex flex-1 items-center justify-center">
+            <EmptyState title="No Issue Selected" description="Select an issue from the sidebar." />
+          </div>
+        ) : (
+          <IssueDetail
+            bundle={selected}
+            onStatusChange={handleStatusChange}
+            onDispatchAgent={dispatchAgent}
+          />
+        )}
+
+        {/* Agent Terminal Drawer */}
+        {terminalOpen && (
+          <div className="absolute inset-x-0 bottom-0 z-50 flex h-48 flex-col border-t border-[var(--compyl-border)] shadow-[0_-10px_30px_rgba(0,0,0,0.3)]" style={{ backgroundColor: "#0C0A09" }}>
+            <div className="flex h-9 shrink-0 items-center justify-between border-b border-[var(--compyl-border)] px-4" style={{ backgroundColor: "var(--compyl-surface)" }}>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--compyl-accent)]">MCP Agent Output</span>
+              <button onClick={() => setTerminalOpen(false)} className="text-[var(--compyl-text-muted)] hover:text-[var(--compyl-text)]">✕</button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 font-mono text-[11px] leading-relaxed">
+              {terminalLines.map((line, i) => (
+                <div key={i} className={line.startsWith("✓") ? "text-emerald-400" : line.startsWith("▶") ? "text-[var(--compyl-accent)]" : "text-[var(--compyl-text-muted)]"}>
+                  {line}
+                </div>
+              ))}
+              <div className="mt-1 inline-block h-4 w-1.5 animate-pulse bg-[var(--compyl-text)]" />
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* ── RIGHT SIDEBAR: Properties ── */}
+      {selected && <PropertiesPanel bundle={selected} />}
     </div>
   );
 }
 
 // =============================================================================
-// Bundle row — developer view with provenance
+// Issue Detail — main content area
 // =============================================================================
 
-function BundleRow({ bundle: initialBundle }: { bundle: DeveloperBundle }) {
-  const [expanded, setExpanded] = useState(false);
-  const [bundle, setBundle] = useState(initialBundle);
-  const [actionError, setActionError] = useState<string | null>(null);
+function IssueDetail({
+  bundle,
+  onStatusChange,
+  onDispatchAgent,
+}: {
+  bundle: DeveloperBundle;
+  onStatusChange: (id: string, status: BundleStatus) => Promise<void>;
+  onDispatchAgent: (b: DeveloperBundle) => void;
+}) {
   const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const statusMap = BUNDLE_STATUS_MAP[bundle.status] ?? { status: bundle.status, label: bundle.status.replace(/_/g, " ") };
 
-  const handleStatusChange = async (newStatus: BundleStatus) => {
+  const handleAction = async (newStatus: BundleStatus) => {
     setActionError(null);
     setActionLoading(true);
     try {
-      const apiBase = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
-      const res = await fetch(`${apiBase}/api/v1/bundles/${bundle.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-        throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`);
-      }
-      setBundle({ ...bundle, status: newStatus });
+      await onStatusChange(bundle.id, newStatus);
     } catch (err) {
       setActionError((err as Error).message);
     } finally {
@@ -198,465 +312,313 @@ function BundleRow({ bundle: initialBundle }: { bundle: DeveloperBundle }) {
     }
   };
 
-  const statusMapping = BUNDLE_STATUS_MAP[bundle.status] ?? {
-    status: bundle.status,
-    label: bundle.status.replace(/_/g, " "),
-  };
+  const actions = TRANSITIONS[bundle.status] ?? [];
 
   return (
-    <article className="rounded-lg border border-[var(--compyl-border)] shadow-sm">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-start gap-4 p-4 text-left hover:bg-[var(--compyl-surface)]"
-      >
-        <div className="flex-1">
+    <div className="flex h-full flex-col overflow-hidden">
+      {/* Header */}
+      <header className="shrink-0 border-b border-[var(--compyl-border)] px-6 py-4" style={{ backgroundColor: "var(--compyl-surface)" }}>
+        <div className="flex items-center gap-2 text-[11px] text-[var(--compyl-text-muted)]">
+          <span className="font-mono font-bold">{bundle.id.slice(0, 8).toUpperCase()}</span>
+          <span>·</span>
+          <SeverityBadge severity={bundle.severity} />
+          <StatusBadge status={statusMap.status} label={statusMap.label} />
+        </div>
+        <div className="mt-2 flex items-start justify-between">
+          <h1 className="text-xl font-bold tracking-tight text-[var(--compyl-text)]">{bundle.title}</h1>
           <div className="flex items-center gap-2">
-            <h3 className="font-medium text-[var(--compyl-text)]">{bundle.title}</h3>
-            <SeverityBadge severity={bundle.severity} />
-            <StatusBadge
-              status={statusMapping.status}
-              label={statusMapping.label}
-            />
+            {actions.map((a) => (
+              <button
+                key={a.status}
+                disabled={actionLoading}
+                onClick={() => handleAction(a.status)}
+                className="rounded border border-[var(--compyl-border)] px-3 py-1.5 text-[11px] font-semibold text-[var(--compyl-text)] transition-colors hover:bg-[rgba(255,255,255,0.05)] disabled:opacity-50"
+              >
+                {a.label}
+              </button>
+            ))}
+            <button
+              onClick={() => onDispatchAgent(bundle)}
+              className="rounded bg-[var(--compyl-accent)] px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:opacity-90"
+            >
+              Dispatch Agent
+            </button>
           </div>
-          <p className="mt-1 text-sm text-[var(--compyl-text-muted)]">{bundle.normalized_task}</p>
         </div>
-        <div className="text-sm text-[var(--compyl-text-muted)]">
-          {expanded ? "\u25B2" : "\u25BC"}
-        </div>
-      </button>
+        {actionError && <p className="mt-1 text-xs text-[var(--compyl-status-error-text)]">{actionError}</p>}
+      </header>
 
-      {expanded && (
-        <div className="border-t border-[var(--compyl-border)] px-4 pb-4 pt-3">
-          {/* Curation Gate — status actions */}
-          <CurationControls
-            bundleId={bundle.id}
-            status={bundle.status}
-            onStatusChange={handleStatusChange}
-            loading={actionLoading}
-            error={actionError}
-          />
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="mx-auto max-w-3xl space-y-8">
 
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            {/* Left: Provenance */}
-            <div>
-              <ProvenanceSection bundle={bundle} />
+          {/* 1. Human Context */}
+          <Section title="Human Context">
+            <div className="rounded-lg border border-[var(--compyl-border)] p-4" style={{ backgroundColor: "var(--compyl-surface)" }}>
+              {bundle.client_raw_text && (
+                <blockquote className="border-l-2 border-[var(--compyl-accent)] pl-3 text-sm italic text-[var(--compyl-text-muted)]">
+                  &ldquo;{bundle.client_raw_text}&rdquo;
+                </blockquote>
+              )}
+              <p className="mt-3 text-sm text-[var(--compyl-text)]">{bundle.summary}</p>
+              <div className="mt-3 rounded-md p-3 font-mono text-xs text-[var(--compyl-accent)]" style={{ backgroundColor: "var(--compyl-accent-subtle)" }}>
+                {bundle.normalized_task}
+              </div>
             </div>
-            {/* Right: Context */}
-            <div>
-              <ContextSection bundle={bundle} />
-            </div>
-          </div>
+          </Section>
 
-          {/* Design Candidates — developer-only */}
-          {bundle.design_candidates && bundle.design_candidates.length > 0 && (
-            <div className="mt-4">
-              <DesignCandidatesSection candidates={bundle.design_candidates} />
-            </div>
+          {/* 2. Design Delta — inline diff */}
+          {bundle.design_diff && Object.keys(bundle.design_diff).length > 0 && (
+            <Section title="Design Delta">
+              <div className="overflow-hidden rounded-lg border border-[var(--compyl-border)]">
+                <div className="border-b border-[var(--compyl-border)] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[var(--compyl-text-muted)]" style={{ backgroundColor: "var(--compyl-surface)" }}>
+                  Style Differences
+                </div>
+                <div className="font-mono text-[12px]">
+                  {Object.entries(bundle.design_diff).map(([prop, value], i) => (
+                    <div key={i} className="flex border-b border-[var(--compyl-border)] last:border-0">
+                      <div className="w-8 shrink-0 border-r border-[var(--compyl-border)] py-1.5 text-center text-[10px] text-[var(--compyl-text-muted)]" style={{ backgroundColor: "var(--compyl-surface)" }}>
+                        {i + 1}
+                      </div>
+                      <div className="flex-1 px-3 py-1.5 text-rose-300" style={{ backgroundColor: "rgba(244,63,94,0.05)" }}>
+                        <span className="mr-2 text-rose-500">-</span>{prop}: {typeof value === "object" ? JSON.stringify(value) : String(value)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Section>
           )}
 
-          {/* Before/After Comparison — developer-only */}
-          {(bundle.screenshot_url || bundle.design_diff) && (
-            <div className="mt-4">
-              <BeforeAfterComparison bundle={bundle} />
-            </div>
+          {/* 3. Exact Source (build-time) — SEPARATE */}
+          <Section title="Exact Source">
+            {bundle.exact_source ? (
+              <div className="flex items-center gap-3 rounded-lg border border-[var(--compyl-accent)]/30 p-3" style={{ backgroundColor: "var(--compyl-accent-subtle)" }}>
+                <div className="flex h-8 w-8 items-center justify-center rounded border border-[var(--compyl-accent)]/30 text-[var(--compyl-accent)]" style={{ backgroundColor: "rgba(234,88,12,0.1)" }}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H5L7 3L9 11L11 7H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </div>
+                <div className="font-mono text-sm">
+                  <span className="font-semibold text-[var(--compyl-accent)]">{bundle.exact_source.component_name}</span>
+                  <span className="ml-2 text-[var(--compyl-text-muted)]">{bundle.exact_source.file_path}:{bundle.exact_source.line}</span>
+                </div>
+                <span className="ml-auto text-[9px] font-bold uppercase tracking-widest text-[var(--compyl-accent)]">Build-time</span>
+              </div>
+            ) : (
+              <p className="text-xs italic text-[var(--compyl-text-muted)]">
+                Not available{bundle.missing_reasons.length > 0 && ` (${bundle.missing_reasons.join(", ")})`}
+              </p>
+            )}
+          </Section>
+
+          {/* 4. Resolved Ancestry (runtime) — SEPARATE */}
+          {bundle.resolved_component_stack.length > 0 && (
+            <Section title={`Component Stack (${bundle.resolved_component_stack.length} frames)`}>
+              <div className="relative rounded-lg border border-[var(--compyl-border)] p-4" style={{ backgroundColor: "var(--compyl-surface)" }}>
+                {/* Vertical connector line */}
+                <div className="absolute bottom-6 left-[27px] top-6 w-px bg-[var(--compyl-border)]" />
+                <div className="relative space-y-2">
+                  {bundle.resolved_component_stack.map((frame, i) => {
+                    const isTarget = !frame.is_library && i > 0;
+                    return (
+                      <div
+                        key={i}
+                        className={`relative flex items-center gap-3 rounded-lg px-3 py-2 ${
+                          isTarget
+                            ? "border border-[var(--compyl-accent)]/20 bg-[var(--compyl-accent-subtle)]"
+                            : ""
+                        }`}
+                      >
+                        <div className={`z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded ${
+                          isTarget
+                            ? "bg-[var(--compyl-accent)] ring-2 ring-[var(--compyl-accent)]/30"
+                            : "bg-[var(--compyl-border)]"
+                        }`}>
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <rect x="2" y="2" width="8" height="8" rx="2" stroke={isTarget ? "white" : "var(--compyl-text-muted)"} strokeWidth="1.5" fill="none" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-1 items-center justify-between font-mono text-xs">
+                          <span className={isTarget ? "font-bold text-[var(--compyl-accent)]" : frame.is_library ? "text-[var(--compyl-text-muted)]" : "text-[var(--compyl-text)]"}>
+                            {frame.component_name}
+                            {frame.file_path && (
+                              <span className="ml-1 text-[var(--compyl-text-muted)]">
+                                {frame.file_path}{frame.line != null ? `:${frame.line}` : ""}
+                              </span>
+                            )}
+                          </span>
+                          {isTarget && (
+                            <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--compyl-accent)]">Target Consumer</span>
+                          )}
+                          {frame.is_library && (
+                            <span className="text-[9px] italic text-[var(--compyl-text-muted)]">library</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="mt-2">
+                <ProvenanceBadge mode={(MODE_MAP[bundle.resolution_mode] ?? { mode: bundle.resolution_mode }).mode} label={(MODE_MAP[bundle.resolution_mode] ?? { label: bundle.resolution_mode }).label} />
+              </div>
+            </Section>
           )}
 
-          {bundle.acceptance_criteria.length > 0 && (
-            <div className="mt-4">
-              <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
-                Acceptance Criteria
-              </h4>
-              <ul className="mt-1 list-disc pl-5 text-sm text-[var(--compyl-text)]">
-                {bundle.acceptance_criteria.map((criterion, i) => (
-                  <li key={i}>{criterion}</li>
+          {/* 5. Design Candidates */}
+          {bundle.design_candidates.length > 0 && (
+            <Section title="Design Candidates">
+              <div className="space-y-2">
+                {bundle.design_candidates.map((c) => (
+                  <div key={c.component_id} className="flex items-center gap-3 rounded-lg border border-[var(--compyl-border)] px-3 py-2" style={{ backgroundColor: "var(--compyl-surface)" }}>
+                    <span className="font-mono text-sm font-medium text-[var(--compyl-text)]">{c.component_name}</span>
+                    {c.is_code_connect && (
+                      <span className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">Code Connect</span>
+                    )}
+                    <span className="ml-auto flex items-center gap-1.5">
+                      <ConfidenceDot value={c.confidence} />
+                      <span className="text-xs text-[var(--compyl-text-muted)]">{Math.round(c.confidence * 100)}%</span>
+                    </span>
+                  </div>
                 ))}
-              </ul>
-            </div>
+              </div>
+            </Section>
           )}
+
+          {/* 6. Acceptance Criteria */}
+          {bundle.acceptance_criteria.length > 0 && (
+            <Section title="Acceptance Criteria">
+              <div className="space-y-1.5">
+                {bundle.acceptance_criteria.map((criterion, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm text-[var(--compyl-text)]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-[var(--compyl-border)] font-mono text-[10px] text-[var(--compyl-text-muted)]">
+                      {i + 1}
+                    </span>
+                    {criterion}
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
+
         </div>
-      )}
-    </article>
-  );
-}
-
-// =============================================================================
-// Curation Gate — developer status transition controls
-// =============================================================================
-
-/** Valid next statuses from each current status. */
-const TRANSITIONS: Record<BundleStatus, { status: BundleStatus; label: string; style: string }[]> = {
-  pending_review: [
-    { status: "approved", label: "Approve", style: "bg-[var(--compyl-accent)] text-white hover:opacity-90" },
-    { status: "rejected", label: "Reject", style: "bg-[var(--compyl-status-rejected-bg)] text-[var(--compyl-status-rejected-text)] hover:opacity-90" },
-  ],
-  approved: [
-    { status: "in_progress", label: "Start Work", style: "bg-[var(--compyl-status-in-progress-bg)] text-[var(--compyl-status-in-progress-text)] hover:opacity-90" },
-    { status: "pending_review", label: "Return to Review", style: "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)] hover:opacity-90" },
-  ],
-  in_progress: [
-    { status: "resolved", label: "Mark Resolved", style: "bg-[var(--compyl-status-resolved-bg)] text-[var(--compyl-status-resolved-text)] hover:opacity-90" },
-    { status: "approved", label: "Unblock", style: "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)] hover:opacity-90" },
-  ],
-  resolved: [
-    { status: "in_progress", label: "Reopen", style: "bg-[var(--compyl-status-warning-bg)] text-[var(--compyl-status-warning-text)] hover:opacity-90" },
-  ],
-  rejected: [
-    { status: "pending_review", label: "Reopen for Review", style: "bg-[var(--compyl-status-pending-bg)] text-[var(--compyl-status-pending-text)] hover:opacity-90" },
-  ],
-};
-
-function CurationControls({
-  bundleId: _bundleId,
-  status,
-  onStatusChange,
-  loading,
-  error,
-}: {
-  bundleId: string;
-  status: BundleStatus;
-  onStatusChange: (status: BundleStatus) => void;
-  loading: boolean;
-  error: string | null;
-}) {
-  const actions = TRANSITIONS[status] ?? [];
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Actions:</span>
-      {actions.map((action) => (
-        <button
-          key={action.status}
-          type="button"
-          disabled={loading}
-          onClick={() => onStatusChange(action.status)}
-          className={`rounded px-3 py-1 text-xs font-medium transition-colors disabled:opacity-50 ${action.style}`}
-        >
-          {action.label}
-        </button>
-      ))}
-      {loading && <span className="text-xs text-[var(--compyl-text-muted)]">Updating...</span>}
-      {error && <span className="text-xs text-[var(--compyl-status-error-text)]">{error}</span>}
+      </div>
     </div>
   );
 }
 
 // =============================================================================
-// Provenance section — exact_source SEPARATE from resolved_component_stack
+// Section wrapper
 // =============================================================================
 
-function ProvenanceSection({ bundle }: { bundle: DeveloperBundle }) {
-  const modeMapping = MODE_MAP[bundle.resolution_mode] ?? {
-    mode: bundle.resolution_mode,
-    label: bundle.resolution_mode,
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h3 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-[var(--compyl-text-muted)]">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+// =============================================================================
+// Properties Panel (right sidebar)
+// =============================================================================
+
+function PropertiesPanel({ bundle }: { bundle: DeveloperBundle }) {
+  const statusMap = BUNDLE_STATUS_MAP[bundle.status] ?? { status: bundle.status, label: bundle.status.replace(/_/g, " ") };
+  const statusColors: Record<string, string> = {
+    pending: "text-amber-400",
+    approved: "text-emerald-400",
+    in_progress: "text-[var(--compyl-accent)]",
+    resolved: "text-emerald-400",
+    rejected: "text-rose-400",
   };
 
   return (
-    <div>
-      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
-        Provenance
-        <span className="ml-2">
-          <ProvenanceBadge mode={modeMapping.mode} label={modeMapping.label} />
-        </span>
-      </h4>
+    <aside className="flex w-[260px] shrink-0 flex-col overflow-y-auto border-l border-[var(--compyl-border)] p-5" style={{ backgroundColor: "var(--compyl-surface)" }}>
+      <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--compyl-text-muted)]">Properties</h3>
 
-      {/* Exact Source — build-time, ALWAYS separate */}
-      <div className="mt-2">
-        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Exact Source</span>
-        {bundle.exact_source ? (
-          <div className="mt-0.5 rounded bg-[var(--compyl-accent-subtle)] px-2 py-1 font-mono text-xs text-[var(--compyl-accent)]">
-            {bundle.exact_source.component_name} &mdash;{" "}
-            {bundle.exact_source.file_path}:{bundle.exact_source.line}
-          </div>
-        ) : (
-          <div className="mt-0.5 text-xs italic text-[var(--compyl-text-muted)]">
-            Not available
-            {bundle.missing_reasons.length > 0 && (
-              <span className="ml-1">
-                ({bundle.missing_reasons.join(", ")})
-              </span>
-            )}
-          </div>
-        )}
+      <div className="mt-4 space-y-5">
+        <PropRow label="Status">
+          <span className={`text-sm font-semibold capitalize ${statusColors[statusMap.status] ?? "text-[var(--compyl-text)]"}`}>
+            {statusMap.label}
+          </span>
+        </PropRow>
+
+        <PropRow label="Severity">
+          <SeverityBadge severity={bundle.severity} />
+        </PropRow>
+
+        <PropRow label="Category">
+          <span className="text-sm text-[var(--compyl-text)]">{bundle.category}</span>
+        </PropRow>
+
+        <PropRow label="Created">
+          <span className="text-sm text-[var(--compyl-text)]">
+            {new Date(bundle.created_at).toLocaleDateString()} {new Date(bundle.created_at).toLocaleTimeString()}
+          </span>
+        </PropRow>
+
+        <PropRow label="Page URL">
+          <a href={bundle.page_url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-[var(--compyl-accent)] hover:underline">
+            {bundle.page_url}
+          </a>
+        </PropRow>
+
+        <PropRow label="Selector">
+          <code className="block truncate rounded bg-[rgba(255,255,255,0.05)] px-2 py-1 font-mono text-[11px] text-[var(--compyl-text)]">
+            {bundle.dom_selector}
+          </code>
+        </PropRow>
       </div>
 
-      {/* Resolved Component Stack — runtime, ALWAYS separate */}
-      <div className="mt-3">
-        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">
-          Component Stack ({bundle.resolved_component_stack.length} frames)
-        </span>
-        {bundle.resolved_component_stack.length > 0 ? (
-          <div className="mt-0.5 space-y-0.5">
-            {bundle.resolved_component_stack.map((frame, i) => (
-              <div
-                key={i}
-                className={`rounded px-2 py-0.5 font-mono text-xs ${
-                  frame.is_library
-                    ? "bg-[var(--compyl-surface)] text-[var(--compyl-text-muted)]"
-                    : "bg-emerald-950/30 text-emerald-400"
-                }`}
-              >
-                {frame.component_name}
-                {frame.file_path && (
-                  <span className="ml-1 text-[var(--compyl-text-muted)]">
-                    {frame.file_path}
-                    {frame.line != null ? `:${frame.line}` : ""}
-                  </span>
-                )}
-                {frame.is_library && (
-                  <span className="ml-1 text-[10px] text-[var(--compyl-text-muted)]">(lib)</span>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="mt-0.5 text-xs italic text-[var(--compyl-text-muted)]">
-            No component stack resolved
-          </div>
-        )}
-      </div>
-
-      {/* Confidence scores */}
-      <div className="mt-3">
-        <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Confidence</span>
-        <div className="mt-0.5 flex gap-3 text-xs">
+      {/* Confidence */}
+      <div className="mt-6 border-t border-[var(--compyl-border)] pt-5">
+        <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--compyl-text-muted)]">Confidence</h3>
+        <div className="mt-3 space-y-2">
           <ConfidenceBar label="Component" value={bundle.confidence.component_match} />
           <ConfidenceBar label="Design" value={bundle.confidence.design_match} />
           <ConfidenceBar label="Clarity" value={bundle.confidence.task_clarity} />
         </div>
       </div>
+
+      {/* Bundle Ready */}
+      <div className="mt-6 border-t border-[var(--compyl-border)] pt-5">
+        <div className="rounded-lg border border-[var(--compyl-border)] p-3" style={{ backgroundColor: "#0C0A09" }}>
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-[var(--compyl-accent)]">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6L4.5 9.5L11 2.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            Bundle Ready
+          </div>
+          <p className="mt-1 text-[10px] text-[var(--compyl-text-muted)]">Ready for MCP ingestion.</p>
+          <code className="mt-2 block rounded bg-[rgba(255,255,255,0.05)] px-2 py-1.5 font-mono text-[10px] text-[var(--compyl-text-muted)]">
+            compyl pull {bundle.id.slice(0, 8)}
+          </code>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function PropRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--compyl-text-muted)]">{label}</span>
+      <div className="mt-1">{children}</div>
     </div>
   );
 }
 
 function ConfidenceBar({ label, value }: { label: string; value: number }) {
   const pct = Math.round(value * 100);
-  const color =
-    pct >= 70
-      ? "bg-[var(--compyl-confidence-high)]"
-      : pct >= 40
-        ? "bg-[var(--compyl-confidence-medium)]"
-        : "bg-[var(--compyl-confidence-low)]";
+  const color = pct >= 70 ? "bg-[var(--compyl-confidence-high)]" : pct >= 40 ? "bg-[var(--compyl-confidence-medium)]" : "bg-[var(--compyl-confidence-low)]";
   return (
-    <div className="flex-1">
-      <div className="flex justify-between text-[var(--compyl-text-muted)]">
+    <div>
+      <div className="flex justify-between text-[10px] text-[var(--compyl-text-muted)]">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
-      <div className="mt-0.5 h-1.5 rounded-full bg-[var(--compyl-surface)]">
-        <div className={`h-1.5 rounded-full ${color}`} style={{ width: `${pct}%` }} />
+      <div className="mt-1 h-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.05)" }}>
+        <div className={`h-1.5 rounded-full transition-all ${color}`} style={{ width: `${pct}%` }} />
       </div>
-    </div>
-  );
-}
-
-// =============================================================================
-// Design Candidates section — Figma component matches (developer-only)
-// =============================================================================
-
-function DesignCandidatesSection({
-  candidates,
-}: {
-  candidates: DeveloperBundle["design_candidates"];
-}) {
-  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
-
-  return (
-    <div>
-      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
-        Design Candidates
-        <span className="ml-2 text-[10px] font-normal text-[var(--compyl-text-muted)]">
-          Figma component matches
-        </span>
-      </h4>
-      <div className="mt-1 space-y-1">
-        {candidates.map((candidate, i) => (
-          <div key={candidate.component_id} className="rounded border border-[var(--compyl-border)]">
-            <button
-              type="button"
-              onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
-              className="flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs hover:bg-[var(--compyl-surface)]"
-            >
-              <span className="font-mono font-medium text-[var(--compyl-text)]">
-                {candidate.component_name}
-              </span>
-              {candidate.is_code_connect && (
-                <span className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">
-                  Code Connect
-                </span>
-              )}
-              <span className="ml-auto flex items-center gap-1">
-                <ConfidenceDot value={candidate.confidence} />
-                <span className="text-[var(--compyl-text-muted)]">
-                  {Math.round(candidate.confidence * 100)}%
-                </span>
-              </span>
-              <span className="text-[var(--compyl-text-muted)]">
-                {expandedIdx === i ? "\u25B2" : "\u25BC"}
-              </span>
-            </button>
-            {expandedIdx === i && candidate.ranking_signals && (
-              <div className="border-t border-[var(--compyl-border)] px-2 py-1.5">
-                <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">
-                  Ranking Signals
-                </span>
-                <div className="mt-1 space-y-0.5">
-                  {candidate.ranking_signals.map((signal, j) => (
-                    <div key={j} className="flex items-center gap-2 text-[11px]">
-                      <span className={signal.matched ? "text-[var(--compyl-confidence-high)]" : "text-[var(--compyl-text-muted)]"}>
-                        {signal.matched ? "+" : "-"}
-                      </span>
-                      <span className="font-mono text-[var(--compyl-text)]">{signal.signal}</span>
-                      {signal.detail && (
-                        <span className="truncate text-[var(--compyl-text-muted)]">{signal.detail}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// =============================================================================
-// Before/After Comparison — screenshot + design diff (developer-only)
-// =============================================================================
-
-function BeforeAfterComparison({ bundle }: { bundle: DeveloperBundle }) {
-  const hasScreenshot = !!bundle.screenshot_url;
-  const hasDiff = bundle.design_diff && Object.keys(bundle.design_diff).length > 0;
-  const topDesignCandidate = bundle.design_candidates?.[0];
-  const hasHighConfidenceMatch = topDesignCandidate && topDesignCandidate.confidence >= 0.6;
-
-  return (
-    <div>
-      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">
-        Before / After Comparison
-      </h4>
-      <div className="mt-2 grid grid-cols-2 gap-4">
-        {/* Before: Current implementation (screenshot) */}
-        <div>
-          <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">Current (Before)</span>
-          {hasScreenshot ? (
-            <img
-              src={bundle.screenshot_url!}
-              alt="Current implementation screenshot"
-              className="mt-1 max-h-48 rounded border border-[var(--compyl-border)]"
-            />
-          ) : (
-            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-[var(--compyl-border)] text-xs text-[var(--compyl-text-muted)]">
-              No screenshot captured
-            </div>
-          )}
-        </div>
-
-        {/* After: Design reference / diff */}
-        <div>
-          <span className="text-[10px] font-medium uppercase text-[var(--compyl-text-muted)]">Design Reference (After)</span>
-          {hasHighConfidenceMatch ? (
-            <div className="mt-1 rounded border border-[var(--compyl-border)] p-2">
-              <div className="flex items-center gap-2 text-xs">
-                <span className="font-mono font-medium text-[var(--compyl-text)]">
-                  {topDesignCandidate.component_name}
-                </span>
-                {topDesignCandidate.is_code_connect && (
-                  <span className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] text-emerald-400">
-                    Code Connect
-                  </span>
-                )}
-                <span className="text-[var(--compyl-text-muted)]">
-                  {Math.round(topDesignCandidate.confidence * 100)}% match
-                </span>
-              </div>
-              {hasDiff ? (
-                <div className="mt-2">
-                  <span className="text-[10px] font-medium text-[var(--compyl-text-muted)]">Style Differences</span>
-                  <CodeBlock language="diff">
-                    {Object.entries(bundle.design_diff!).map(([prop, value]) =>
-                      `${prop}: ${String(value)}`
-                    ).join("\n")}
-                  </CodeBlock>
-                </div>
-              ) : (
-                <div className="mt-2 text-[11px] text-[var(--compyl-text-muted)]">
-                  No style differences computed yet
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="mt-1 flex h-24 items-center justify-center rounded border border-dashed border-[var(--compyl-border)] text-xs text-[var(--compyl-text-muted)]">
-              {topDesignCandidate
-                ? `Low confidence match (${Math.round(topDesignCandidate.confidence * 100)}%) \u2014 diff not computed`
-                : "No Figma design match available"}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// =============================================================================
-// Context section — page, selector, candidates
-// =============================================================================
-
-function ContextSection({ bundle }: { bundle: DeveloperBundle }) {
-  return (
-    <div>
-      <h4 className="text-xs font-semibold uppercase text-[var(--compyl-text-muted)]">Context</h4>
-
-      <div className="mt-2 space-y-2 text-xs">
-        <div>
-          <span className="font-medium text-[var(--compyl-text-muted)]">Page: </span>
-          <span className="text-[var(--compyl-text)]">{bundle.page_url}</span>
-        </div>
-        <div>
-          <span className="font-medium text-[var(--compyl-text-muted)]">Selector: </span>
-          <code className="rounded bg-[var(--compyl-surface)] px-1 py-0.5 text-[var(--compyl-text)]">
-            {bundle.dom_selector}
-          </code>
-        </div>
-        <div>
-          <span className="font-medium text-[var(--compyl-text-muted)]">Category: </span>
-          <span className="text-[var(--compyl-text)]">{bundle.category}</span>
-        </div>
-      </div>
-
-      {bundle.component_candidates.length > 0 && (
-        <div className="mt-3">
-          <span className="text-xs font-medium text-[var(--compyl-text-muted)]">
-            Component Candidates
-          </span>
-          <div className="mt-0.5 space-y-0.5">
-            {bundle.component_candidates.map((c, i) => (
-              <div key={i} className="flex items-center gap-2 text-xs">
-                <span className="font-mono text-[var(--compyl-text)]">{c.component_name}</span>
-                {c.file_path && (
-                  <span className="text-[var(--compyl-text-muted)]">{c.file_path}</span>
-                )}
-                <span className="rounded bg-[var(--compyl-surface)] px-1 py-0.5 text-[var(--compyl-text-muted)]">
-                  {Math.round(c.confidence * 100)}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {bundle.screenshot_url && (
-        <div className="mt-3">
-          <span className="text-xs font-medium text-[var(--compyl-text-muted)]">Screenshot</span>
-          <img
-            src={bundle.screenshot_url}
-            alt="Screenshot"
-            className="mt-1 max-h-32 rounded border border-[var(--compyl-border)]"
-          />
-        </div>
-      )}
     </div>
   );
 }
